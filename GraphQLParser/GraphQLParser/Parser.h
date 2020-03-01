@@ -1,24 +1,17 @@
 #pragma once
 
-#include <GraphQLParser/ILexer.h>
-#include <GraphQLParser/ISource.h>
-#include <GraphQLParser/ParserContext.h>
+#include <GraphQLParser/Lexer1.h>
+#include <GraphQLParser/Source.h>
 #include <GraphQLParser/AST/GraphQLDocument.h>
 
 namespace GraphQLParser {
 	class Parser {
 	private:
-		ILexer lexer;
+		Lexer lexer;
 
 	public:
-		Parser(ILexer lexer) : lexer(lexer) {
+		Parser(Lexer lexer);
 
-		}
-
-		AST::GraphQLDocument Parse(ISource source) {
-			auto context = ParserContext(source, lexer);
-
-			//// TODO!!!
-		}
+		AST::GraphQLDocument Parse(Source source);
 	};
 }

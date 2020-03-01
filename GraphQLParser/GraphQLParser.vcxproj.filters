@@ -16,6 +16,15 @@
     <Filter Include="Header Files\AST">
       <UniqueIdentifier>{9b35a332-0b73-4aa4-b4dd-d2107e42901f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AST">
+      <UniqueIdentifier>{860e0bcb-2b73-4f4d-96fe-c2591471bbcf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions">
+      <UniqueIdentifier>{f44d9ae2-4402-4d0d-be1e-5578faa243e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exceptions">
+      <UniqueIdentifier>{12608f9b-1b07-4986-aab1-cce806d62f91}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphQLParser\AST\ASTNode.h">
@@ -33,15 +42,6 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLLocation.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
-    <ClInclude Include="GraphQLParser\ILexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphQLParser\ISource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphQLParser\Lexer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GraphQLParser\Parser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -54,5 +54,70 @@
     <ClInclude Include="GraphQLParser\TokenKind.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GraphQLParser\Lexer1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\Source.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\Location.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLName.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLOperationDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLDirective.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLArgument.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLValue.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLSelectionSet.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLVariableDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLType.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLVariable.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\Lexer1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\ParserContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.cpp">
+      <Filter>Source Files\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\Location.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

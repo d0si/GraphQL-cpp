@@ -14,7 +14,7 @@ namespace GraphQLParser {
 
 			ASTNodeKind Kind;
 			GraphQLLocation Location;
-			// GraphQLComment Comment = NULL; // Nullable!
+			GraphQLComment Comment;
 		};
 	}
 }

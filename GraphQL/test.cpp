@@ -1,4 +1,4 @@
-
+/*
 int main() {
 	var schema = Schema.For(@"
 		type Query{
@@ -13,3 +13,4 @@ int main() {
 
 	Console.WriteLine(json); // { "data": { "hello": "Hello World!" } }
 }
+*/

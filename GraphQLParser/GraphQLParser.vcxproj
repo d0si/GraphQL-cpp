@@ -21,16 +21,36 @@
   <ItemGroup>
     <ClInclude Include="GraphQLParser\AST\ASTNode.h" />
     <ClInclude Include="GraphQLParser\AST\Enums.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLArgument.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLComment.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLDirective.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLDocument.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLLocation.h" />
-    <ClInclude Include="GraphQLParser\ILexer.h" />
-    <ClInclude Include="GraphQLParser\ISource.h" />
-    <ClInclude Include="GraphQLParser\Lexer.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLName.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLOperationDefinition.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLSelectionSet.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLType.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLValue.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLVariable.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLVariableDefinition.h" />
+    <ClInclude Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.h" />
+    <ClInclude Include="GraphQLParser\Lexer1.h" />
+    <ClInclude Include="GraphQLParser\Location.h" />
     <ClInclude Include="GraphQLParser\Parser.h" />
     <ClInclude Include="GraphQLParser\ParserContext.h" />
+    <ClInclude Include="GraphQLParser\Source.h" />
     <ClInclude Include="GraphQLParser\Token.h" />
     <ClInclude Include="GraphQLParser\TokenKind.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp" />
+    <ClCompile Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.cpp" />
+    <ClCompile Include="GraphQLParser\Lexer1.cpp" />
+    <ClCompile Include="GraphQLParser\Location.cpp" />
+    <ClCompile Include="GraphQLParser\Parser.cpp" />
+    <ClCompile Include="GraphQLParser\ParserContext.cpp" />
+    <ClCompile Include="GraphQLParser\Source.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -40,26 +60,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -85,15 +105,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

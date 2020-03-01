@@ -17,7 +17,7 @@ namespace GraphQLParser {
 
 		static std::string get_token_kind_description(TokenKind kind) {
 			switch (kind) {
-			case TokenKind::EOF:
+			case TokenKind::EOF_:
 				return "EOF";
 			case TokenKind::BANG:
 				return "!";

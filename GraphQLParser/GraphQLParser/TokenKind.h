@@ -2,7 +2,7 @@
 
 namespace GraphQLParser {
 	enum TokenKind {
-        EOF = 1,
+        EOF_ = 1,
         BANG = 2,
         DOLLAR = 3,
         PAREN_L = 4,

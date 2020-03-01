@@ -1,6 +1,7 @@
 #include <GraphQL/Utilities/SchemaBuilder.h>
-#include <GraphQLParser/Lexer.h>
+#include <GraphQLParser/Lexer1.h>
 #include <GraphQLParser/Parser.h>
+#include <GraphQLParser/Source.h>
 
 namespace GraphQL {
 	namespace Utilities {
@@ -15,7 +16,7 @@ namespace GraphQL {
 			auto lexer = GraphQLParser::Lexer();
 			auto parser = GraphQLParser::Parser(lexer);
 
-			return parser.Parse(Source(document));
+			return parser.Parse(GraphQLParser::Source(document));
 		}
 	}
 }

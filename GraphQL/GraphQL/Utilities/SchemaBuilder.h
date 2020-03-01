@@ -8,7 +8,7 @@ namespace GraphQL {
 	namespace Utilities {
 		class SchemaBuilder {
 		public:
-			Types::ISchema Build(std::string type_definitions);
+			GraphQL::Types::ISchema Build(std::string type_definitions);
 
 			GraphQLParser::AST::GraphQLDocument Parse(std::string document);
 		};
