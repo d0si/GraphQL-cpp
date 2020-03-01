@@ -18,6 +18,20 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraphQLParser\AST\ASTNode.h" />
+    <ClInclude Include="GraphQLParser\AST\Enums.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLComment.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLDocument.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLLocation.h" />
+    <ClInclude Include="GraphQLParser\ILexer.h" />
+    <ClInclude Include="GraphQLParser\ISource.h" />
+    <ClInclude Include="GraphQLParser\Lexer.h" />
+    <ClInclude Include="GraphQLParser\Parser.h" />
+    <ClInclude Include="GraphQLParser\ParserContext.h" />
+    <ClInclude Include="GraphQLParser\Token.h" />
+    <ClInclude Include="GraphQLParser\TokenKind.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{834C562B-B619-49DF-8F68-C48E80BE2F6F}</ProjectGuid>
@@ -137,8 +151,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

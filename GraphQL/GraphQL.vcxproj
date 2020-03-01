@@ -138,6 +138,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GraphQLParser\GraphQLParser.vcxproj">
+      <Project>{834c562b-b619-49df-8f68-c48e80be2f6f}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GraphQL\Types\Schema.cpp" />
+    <ClCompile Include="GraphQL\Utilities\SchemaBuilder.cpp" />
+    <ClCompile Include="test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="GraphQL\Types\Schema.h" />
+    <ClInclude Include="GraphQL\Utilities\SchemaBuilder.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
