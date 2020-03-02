@@ -6,12 +6,12 @@
 #include <GraphQLParser/AST/GraphQLListValue.h>
 #include <GraphQLParser/AST/GraphQLObjectValue.h>
 #include <GraphQLParser/AST/GraphQLScalarValue.h>
+#include <GraphQLParser/AST/GraphQLListType.h>
+#include <GraphQLParser/AST/GraphQLNonNullType.h>
 
 namespace GraphQLParser {
-	ParserContext::ParserContext(Source source, Lexer lexer) : source(source), lexer(lexer), current_token(Token(TokenKind::UNKNOWN, "", 0, 0)) {
-		// comments = null;
+	ParserContext::ParserContext(Source source, Lexer lexer) : source(source), lexer(lexer), current_token(lexer.Lex(source)) {
 
-		current_token = lexer.Lex(source);
 	}
 
 	AST::GraphQLDocument ParserContext::Parse() {
@@ -274,11 +274,13 @@ namespace GraphQLParser {
 		}
 
 		if (Peek(TokenKind::NAME)) {
-			AST::ASTNode definition = ParseNamedDefintion();
+			AST::ASTNode definition = ParseNamedDefinition();
 
 			if (definition.)
-			//i) TODO
+				//i) TODO
 		}
+
+		throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
 	}
 
 	AST::ASTNode ParserContext::ParseOperationDefinition() {
@@ -626,6 +628,78 @@ namespace GraphQLParser {
 		value.Location = GetLocation(token.Start);
 
 		return value;
+	}
+
+	AST::GraphQLType ParserContext::AdvanceThroughColonAndParseType() {
+		Expect(TokenKind::COLON);
+		return ParseType();
+	}
+
+	AST::GraphQLType ParserContext::ParseType() {
+		AST::GraphQLType type;
+		int start = current_token.Start;
+
+		if (Skip(TokenKind::BRACKET_L)) {
+			AST::GraphQLType type_1 = ParseType();
+			Expect(TokenKind::BRACKET_R);
+
+			type = AST::GraphQLListType(type_1);
+			type.Location = GetLocation(start);
+		}
+		else {
+			type = ParseNamedType();
+		}
+
+		if (Skip(TokenKind::BANG)) {
+			AST::GraphQLNonNullType nn_type;
+			nn_type.Type = type;
+			nn_type.Location = GetLocation(start);
+
+			return nn_type;
+		}
+
+		return type;
+	}
+
+	AST::ASTNode ParserContext::ParseNamedDefinition() {
+		std::string value = current_token.Value;
+
+		if (value == "query" || value == "mutation" || value == "subscription") {
+			return ParseOperationDefinition();
+		}
+		else if (value == "fragment") {
+			return ParseFragmentDefinition();
+		}
+		else if (value == "schema") {
+			return ParseSchemaDefinition();
+		}
+		else if (value == "scalar") {
+			return ParseScalarDefinition();
+		}
+		else if (value == "type") {
+			return ParseObjectTypeDefinition();
+		}
+		else if (value == "interface") {
+			return ParseInterfaceTypeDefinition();
+		}
+		else if (value == "union") {
+			return ParseUnionTypeDefinition();
+		}
+		else if (value == "enum") {
+			return ParseEnumTypeDefinition();
+		}
+		else if (value == "input") {
+			return ParseInputObjectTypeDefinition();
+		}
+		else if (value == "extend") {
+			return ParseTypeExtensionDefinition();
+		}
+		else if (value == "directive") {
+			return ParseDirectiveDefinition();
+		}
+		else {
+			return AST::ASTNode();
+		}
 	}
 
 	bool ParserContext::Peek(TokenKind kind) {

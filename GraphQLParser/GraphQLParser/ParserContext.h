@@ -24,7 +24,7 @@ namespace GraphQLParser {
 		Token current_token;
 
 	public:
-		ParserContext(Source source, Lexer lexer);
+		/*DONE*/ParserContext(Source source, Lexer lexer);
 
 		/*DONE*/AST::GraphQLDocument Parse();
 
@@ -34,8 +34,8 @@ namespace GraphQLParser {
 		/*DONE*/void Advance();
 
 		/*DONE*/AST::GraphQLDocument CreateDocument(int start, std::vector<AST::ASTNode> definitions);
-		AST::ASTNode CreateOperationDefinition(int start);
-		AST::ASTNode CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name);
+		/*DONE*/AST::ASTNode CreateOperationDefinition(int start);
+		/*DONE*/AST::ASTNode CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name);
 
 		/*DONE*/void Expect(TokenKind kind);
 
@@ -51,7 +51,7 @@ namespace GraphQLParser {
 		/*DONE*/std::vector<AST::GraphQLArgument> ParseArguments();
 		/*DONE*/AST::GraphQLArgument ParseArgument();
 		/*DONE*/AST::GraphQLValue ExpectColonAndParseValueLiteral(bool is_content);
-		AST::GraphQLValue ParseValueLiteral(bool is_constant);
+		/*DONE*/AST::GraphQLValue ParseValueLiteral(bool is_constant);
 
 		/*DONE*/AST::GraphQLName ParseName();
 		/*DONE*/AST::GraphQLComment ParseComment();
@@ -97,9 +97,12 @@ namespace GraphQLParser {
 		/*DONE*/AST::GraphQLValue ParseNullValue(Token token);
 		/*DONE*/AST::GraphQLValue ParseEnumValue(Token token);
 
+		/*DONE*/AST::GraphQLType AdvanceThroughColonAndParseType();
+		/*DONE*/AST::GraphQLType ParseType();
+
+		AST::ASTNode ParseNamedDefinition();
+
 		/*DONE*/bool Peek(TokenKind kind);
 		/*DONE*/bool Skip(TokenKind kind);
-
-
 	};
 }
