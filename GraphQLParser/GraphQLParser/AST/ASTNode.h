@@ -8,9 +8,7 @@ namespace GraphQLParser {
 	namespace AST {
 		class ASTNode {
 		public:
-			ASTNode() : Location(0, 0) {
-
-			}
+			ASTNode();
 
 			ASTNodeKind Kind;
 			GraphQLLocation Location;

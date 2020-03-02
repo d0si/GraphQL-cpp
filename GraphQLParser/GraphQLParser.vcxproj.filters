@@ -119,5 +119,8 @@
     <ClCompile Include="GraphQLParser\Location.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\ASTNode.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

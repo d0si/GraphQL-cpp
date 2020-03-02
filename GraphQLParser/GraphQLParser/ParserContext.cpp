@@ -1,6 +1,8 @@
 #include <GraphQLParser/ParserContext.h>
 #include <GraphQLParser/Exceptions/GraphQLSyntaxErrorException.h>
 #include <GraphQLParser/AST/GraphQLOperationDefinition.h>
+#include <GraphQLParser/AST/GraphQLFragmentSpread.h>
+#include <GraphQLParser/AST/GraphQLInlineFragment.h>
 
 namespace GraphQLParser {
 	ParserContext::ParserContext(Source source, Lexer lexer) : source(source), lexer(lexer), current_token(Token(TokenKind::UNKNOWN, "", 0, 0)) {
@@ -11,6 +13,17 @@ namespace GraphQLParser {
 
 	AST::GraphQLDocument ParserContext::Parse() {
 		return ParseDocument();
+	}
+
+	AST::GraphQLComment ParserContext::GetComment() {
+		AST::GraphQLComment comment;
+
+		if (!comments.empty()) {
+			comment = comments.top();
+			comments.pop();
+		}
+
+		return comment;
 	}
 
 	void ParserContext::Advance() {
@@ -27,10 +40,29 @@ namespace GraphQLParser {
 		return document;
 	}
 
-	AST::ASTNode CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name) {
+	AST::ASTNode ParserContext::CreateOperationDefinition(int start) {
 		AST::GraphQLComment comment = GetComment();
 
 		AST::GraphQLOperationDefinition definition;
+		definition.Comment = comment;
+		definition.Operation = AST::OperationType::Query;
+		definition.SelectionSet = ParseSelectionSet();
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::ASTNode ParserContext::CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name) {
+		AST::GraphQLComment comment = GetComment();
+
+		AST::GraphQLOperationDefinition definition;
+		definition.Comment = comment;
+		definition.Operation = operation;
+		definition.Name = name;
+		definition.VariableDefinitions = ParseVariableDefinitions();
+		definition.Directives = ParseDirectives();
+		definition.SelectionSet = ParseSelectionSet();
+		definition.Location = GetLocation(start);
 
 		return definition;
 	}
@@ -53,7 +85,50 @@ namespace GraphQLParser {
 	AST::GraphQLName ParserContext::GetName() {
 		return Peek(TokenKind::NAME) ? ParseName() : AST::GraphQLName();
 	}
-	
+
+	std::vector<AST::ASTNode> ParserContext::ManyNode(TokenKind open, std::vector<AST::ASTNode>(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		auto nodes = next(this);
+
+		while (!Skip(close)) {
+			auto nodes1 = next(this);
+			for (auto node : nodes1) {
+				nodes.push_back(node);
+			}
+		}
+
+		return nodes;
+	}
+
+	std::vector<AST::GraphQLArgument> ParserContext::ManyArgument(TokenKind open, std::vector<AST::GraphQLArgument>(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		auto nodes = next(this);
+
+		while (!Skip(close)) {
+			auto nodes1 = next(this);
+			for (auto node : nodes1) {
+				nodes.push_back(node);
+			}
+		}
+
+		return nodes;
+	}
+
+	std::vector<AST::GraphQLArgument> ParserContext::ParseArguments() {
+		return Peek(TokenKind::PAREN_L) ?
+			ManyArgument(TokenKind::PAREN_L, [](ParserContext* context) -> AST::GraphQLArgument {
+				return context->ParseArgument();
+				},
+				TokenKind::PAREN_R)
+			: std::vector<AST::GraphQLArgument>();
+	}
+
 	AST::GraphQLName ParserContext::ParseName() {
 		int start = current_token.Start;
 		std::string value = current_token.Value;
@@ -134,7 +209,8 @@ namespace GraphQLParser {
 		}
 		else if (token.Value == "subscription") {
 			return AST::OperationType::Subscription;
-		} else {
+		}
+		else {
 			return AST::OperationType::Query;
 		}
 	}
@@ -144,6 +220,87 @@ namespace GraphQLParser {
 		auto definitions = ParseDefinitionsIfNotEOF();
 
 		return CreateDocument(start, definitions);
+	}
+
+	AST::ASTNode ParserContext::ParseSelection() {
+		return Peek(TokenKind::SPREAD) ? ParseFragment() : ParseFieldSelection();
+	}
+
+	AST::ASTNode ParserContext::ParseFragment() {
+		int start = current_token.Start;
+		Expect(TokenKind::SPREAD);
+
+		if (Peek(TokenKind::NAME) && !(current_token.Value == "on")) {
+			return CreateGraphQLFragmentSpread(start);
+		}
+
+		return CreateInlineFragment(start);
+	}
+
+	AST::ASTNode ParserContext::CreateGraphQLFragmentSpread(int start) {
+		AST::GraphQLFragmentSpread fragment;
+
+		fragment.Name = ParseFragmentName();
+		fragment.Directives = ParseDirectives();
+		fragment.Location = GetLocation(start);
+
+		return fragment;
+	}
+
+	AST::ASTNode ParserContext::CreateInlineFragment(int start) {
+		AST::GraphQLInlineFragment fragment;
+
+		fragment.TypeCondition = GetTypeCondition();
+		fragment.Directives = ParseDirectives();
+		fragment.SelectionSet = ParseSelectionSet();
+		fragment.Location = GetLocation(start);
+
+		return fragment;
+	}
+
+	AST::ASTNode ParserContext::ParseFieldSelection() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		AST::GraphQLName name_or_alias = ParseName();
+		AST::GraphQLName name;
+		AST::GraphQLName alias;
+
+		if (Skip(TokenKind::COLON)) {
+			name = ParseName();
+			alias = name_or_alias;
+		}
+		else {
+			name = name_or_alias;
+		}
+
+		return CreateFieldSelection(start, name, alias, comment);
+	}
+
+	AST::GraphQLFieldSelection ParserContext::CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, AST::GraphQLComment comment) {
+		AST::GraphQLFieldSelection field_selection;
+
+		field_selection.Comment = comment;
+		field_selection.Alias = alias;
+		field_selection.Name = name;
+		field_selection.Arguments = ParseArguments();
+		field_selection.Directives = ParseDirectives();
+		field_selection.SelectionSet = Peek(TokenKind::BRACE_L) ? ParseSelectionSet() : AST::GraphQLSelectionSet();
+		field_selection.Location = GetLocation(start);
+
+		return field_selection;
+	}
+
+	AST::GraphQLSelectionSet ParserContext::ParseSelectionSet() {
+		int start = current_token.Start;
+
+		AST::GraphQLSelectionSet selection_set;
+		selection_set.Selections = ManyNode(TokenKind::BRACE_L, [](ParserContext* context) -> AST::ASTNode {
+			context->ParseSelection();
+			},
+			TokenKind::BRACE_R);
+		selection_set.Location = GetLocation(start);
+
+		return selection_set;
 	}
 
 	bool ParserContext::Peek(TokenKind kind) {

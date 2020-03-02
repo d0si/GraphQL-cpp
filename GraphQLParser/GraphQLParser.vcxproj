@@ -43,6 +43,7 @@
     <ClInclude Include="GraphQLParser\TokenKind.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GraphQLParser\AST\ASTNode.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp" />
     <ClCompile Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.cpp" />
