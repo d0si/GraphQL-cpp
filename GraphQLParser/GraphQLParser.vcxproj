@@ -28,10 +28,14 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLFieldSelection.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLFragmentSpread.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLInlineFragment.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLListValue.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLLocation.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLName.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLNamedType.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLObjectField.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLObjectValue.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLOperationDefinition.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLScalarValue.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLSelectionSet.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLType.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLValue.h" />

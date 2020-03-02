@@ -81,16 +81,21 @@ namespace GraphQLParser {
 
 		/*DONE*/AST::GraphQLValue ParseList(bool is_constant);
 		/*DONE*/AST::GraphQLValue ParseObject(bool is_constant);
-		AST::GraphQLValue ParseInt(bool is_constant);
-		AST::GraphQLValue ParseFloat(bool is_constant);
-		AST::GraphQLValue ParseString(bool is_constant);
-		AST::GraphQLValue ParseNameValue(bool is_constant);
-		AST::GraphQLVariable ParseVariable();
+		/*DONE*/AST::GraphQLValue ParseInt(bool is_constant);
+		/*DONE*/AST::GraphQLValue ParseFloat(bool is_constant);
+		/*DONE*/AST::GraphQLValue ParseString(bool is_constant);
+		/*DONE*/AST::GraphQLValue ParseNameValue(bool is_constant);
+		/*DONE*/AST::GraphQLVariable ParseVariable();
 
 		/*DONE*/AST::GraphQLValue ParseConstantValue();
 		/*DONE*/AST::GraphQLValue ParseValueValue();
 
-		std::vector<AST::GraphQLObjectField> ParseObjectFields(bool is_constant);
+		/*DONE*/std::vector<AST::GraphQLObjectField> ParseObjectFields(bool is_constant);
+		/*DONE*/AST::GraphQLObjectField ParseObjectField(bool is_constant);
+
+		/*DONE*/AST::GraphQLValue ParseBooleanValue(Token token);
+		/*DONE*/AST::GraphQLValue ParseNullValue(Token token);
+		/*DONE*/AST::GraphQLValue ParseEnumValue(Token token);
 
 		/*DONE*/bool Peek(TokenKind kind);
 		/*DONE*/bool Skip(TokenKind kind);

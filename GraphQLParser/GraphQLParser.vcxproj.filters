@@ -105,6 +105,18 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLFieldSelection.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLListValue.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLObjectValue.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLObjectField.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLScalarValue.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp">
