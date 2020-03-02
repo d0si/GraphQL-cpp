@@ -25,8 +25,12 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLComment.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLDirective.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLDocument.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLFieldSelection.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLFragmentSpread.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLInlineFragment.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLLocation.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLName.h" />
+    <ClInclude Include="GraphQLParser\AST\GraphQLNamedType.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLOperationDefinition.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLSelectionSet.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLType.h" />
@@ -46,6 +50,7 @@
     <ClCompile Include="GraphQLParser\AST\ASTNode.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLNamedType.cpp" />
     <ClCompile Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.cpp" />
     <ClCompile Include="GraphQLParser\Lexer1.cpp" />
     <ClCompile Include="GraphQLParser\Location.cpp" />

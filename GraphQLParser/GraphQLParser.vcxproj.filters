@@ -93,6 +93,18 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLVariable.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLFragmentSpread.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLInlineFragment.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLNamedType.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLFieldSelection.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp">
@@ -120,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GraphQLParser\AST\ASTNode.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLNamedType.cpp">
       <Filter>Source Files\AST</Filter>
     </ClCompile>
   </ItemGroup>
