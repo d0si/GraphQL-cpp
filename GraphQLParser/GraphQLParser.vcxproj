@@ -58,6 +58,7 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLValue.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLVariable.h" />
     <ClInclude Include="GraphQLParser\AST\GraphQLVariableDefinition.h" />
+    <ClInclude Include="GraphQLParser\LexerContext.h" />
     <ClInclude Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.h" />
     <ClInclude Include="GraphQLParser\Lexer1.h" />
     <ClInclude Include="GraphQLParser\Location.h" />
@@ -74,6 +75,7 @@
     <ClCompile Include="GraphQLParser\AST\GraphQLNamedType.cpp" />
     <ClCompile Include="GraphQLParser\Exceptions\GraphQLSyntaxErrorException.cpp" />
     <ClCompile Include="GraphQLParser\Lexer1.cpp" />
+    <ClCompile Include="GraphQLParser\LexerContext.cpp" />
     <ClCompile Include="GraphQLParser\Location.cpp" />
     <ClCompile Include="GraphQLParser\Parser.cpp" />
     <ClCompile Include="GraphQLParser\ParserContext.cpp" />

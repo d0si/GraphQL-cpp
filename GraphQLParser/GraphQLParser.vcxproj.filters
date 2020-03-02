@@ -168,6 +168,9 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLDirectiveDefinition.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
+    <ClInclude Include="GraphQLParser\LexerContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="GraphQLParser\AST\GraphQLListType.cpp">
       <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\LexerContext.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
