@@ -6,6 +6,7 @@
 #include <GraphQLParser/Lexer1.h>
 #include <GraphQLParser/Token.h>
 #include <GraphQLParser/AST/Enums.h>
+#include <GraphQLParser/AST/GraphQLComment.h>
 #include <GraphQLParser/AST/GraphQLDocument.h>
 #include <GraphQLParser/AST/GraphQLFieldSelection.h>
 #include <GraphQLParser/AST/GraphQLName.h>

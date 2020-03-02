@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <GraphQLParser/AST/ASTNode.h>
 
 namespace GraphQLParser {

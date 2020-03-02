@@ -170,9 +170,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp">
-      <Filter>Source Files\AST</Filter>
-    </ClCompile>
     <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp">
       <Filter>Source Files\AST</Filter>
     </ClCompile>

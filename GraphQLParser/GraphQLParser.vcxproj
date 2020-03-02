@@ -69,7 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphQLParser\AST\ASTNode.cpp" />
-    <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLListType.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLNamedType.cpp" />

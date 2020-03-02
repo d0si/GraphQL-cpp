@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <GraphQLParser/AST/GraphQLType.h>
 #include <GraphQLParser/AST/GraphQLName.h>
 
