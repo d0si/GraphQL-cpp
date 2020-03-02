@@ -181,6 +181,22 @@ namespace GraphQLParser {
 		return nodes;
 	}
 
+	std::vector<AST::GraphQLEnumValueDefinition> ParserContext::ManyEnumValueDefinition(TokenKind open, AST::GraphQLEnumValueDefinition(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		std::vector<AST::GraphQLEnumValueDefinition> nodes;
+
+		nodes.push_back(next(this));
+
+		while (!Skip(close)) {
+			nodes.push_back(next(this));
+		}
+
+		return nodes;
+	}
+
 	std::vector<AST::GraphQLValue> ParserContext::Any(TokenKind open, AST::GraphQLValue(*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close) {
 		Expect(open);
 
@@ -201,6 +217,20 @@ namespace GraphQLParser {
 		ParseComment();
 
 		std::vector<AST::GraphQLFieldDefinition> nodes;
+
+		while (!Skip(close)) {
+			nodes.push_back(next(this));
+		}
+
+		return nodes;
+	}
+
+	std::vector<AST::GraphQLInputValueDefinition> ParserContext::Any(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		std::vector<AST::GraphQLInputValueDefinition> nodes;
 
 		while (!Skip(close)) {
 			nodes.push_back(next(this));
@@ -970,6 +1000,120 @@ namespace GraphQLParser {
 		} while (Skip(TokenKind::PIPE));
 
 		return members;
+	}
+
+	AST::GraphQLEnumTypeDefinition ParserContext::ParseEnumTypeDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		ExpectKeyword("enum");
+
+		AST::GraphQLEnumTypeDefinition definition;
+		definition.Comment = comment;
+		definition.Name = ParseName();
+		definition.Directives = ParseDirectives();
+		definition.Values = ManyEnumValueDefinition(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLEnumValueDefinition {
+			return context->ParseEnumValueDefinition();
+			}, TokenKind::BRACE_R);
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLEnumValueDefinition ParserContext::ParseEnumValueDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+
+		AST::GraphQLEnumValueDefinition definition;
+		definition.Comment = comment;
+		definition.Name = ParseName();
+		definition.Directives = ParseDirectives();
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLInputObjectTypeDefinition ParserContext::ParseInputObjectTypeDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		ExpectKeyword("input");
+
+		AST::GraphQLInputObjectTypeDefinition definition;
+		definition.Comment = comment;
+		definition.Name = ParseName();
+		definition.Directives = ParseDirectives();
+		definition.Fields = Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLInputValueDefinition {
+			return context->ParseInputValueDef();
+			}, TokenKind::BRACE_R);
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLTypeExtensionDefinition ParserContext::ParseTypeExtensionDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		ExpectKeyword("extend");
+		AST::GraphQLObjectTypeDefinition type_definition = ParseObjectTypeDefinition();
+
+		AST::GraphQLTypeExtensionDefinition definition;
+		definition.Comment = comment;
+		definition.Name = definition.Name;
+		definition.Definition = type_definition;
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLDirectiveDefinition ParserContext::ParseDirectiveDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		ExpectKeyword("directive");
+		Expect(TokenKind::AT);
+		AST::GraphQLName name = ParseName();
+		std::vector<AST::GraphQLInputValueDefinition> args = ParseArgumentDefs();
+		bool repeatable = ParseRepeatable();
+
+		ExpectKeyword("on");
+		auto locations = ParseDirectiveLocations();
+
+		AST::GraphQLDirectiveDefinition definition;
+		definition.Comment = comment;
+		definition.Name = name;
+		definition.Repeatable = repeatable;
+		definition.Arguments = args;
+		definition.Locations = locations;
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	bool ParserContext::ParseRepeatable() {
+		if (Peek(TokenKind::NAME)) {
+			if (current_token.Value == "repeatable") {
+				Advance();
+				return true;
+			}
+			else if (current_token.Value == "on") {
+				return false;
+			}
+			else {
+				throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
+			}
+		}
+
+		return false;
+	}
+
+	std::vector<AST::GraphQLName> ParserContext::ParseDirectiveLocations() {
+		std::vector<AST::GraphQLName> locations;
+
+		Skip(TokenKind::PIPE);
+
+		do {
+			locations.push_back(ParseName());
+		} while (Skip(TokenKind::PIPE));
+
+		return locations;
 	}
 
 	bool ParserContext::Peek(TokenKind kind) {
