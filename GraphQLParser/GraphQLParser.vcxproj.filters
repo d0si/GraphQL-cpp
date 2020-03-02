@@ -117,6 +117,57 @@
     <ClInclude Include="GraphQLParser\AST\GraphQLScalarValue.h">
       <Filter>Header Files\AST</Filter>
     </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLListType.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLNonNullType.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLFragmentDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLSchemaDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLOperationTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLScalarTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLObjectTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLFieldDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLInputValueDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLInterfaceTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLUnionTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLEnumTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLEnumValueDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLInputObjectTypeDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLTypeExtensionDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQLParser\AST\GraphQLDirectiveDefinition.h">
+      <Filter>Header Files\AST</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphQLParser\AST\GraphQLComment.cpp">
@@ -147,6 +198,9 @@
       <Filter>Source Files\AST</Filter>
     </ClCompile>
     <ClCompile Include="GraphQLParser\AST\GraphQLNamedType.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLListType.cpp">
       <Filter>Source Files\AST</Filter>
     </ClCompile>
   </ItemGroup>

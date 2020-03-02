@@ -364,8 +364,8 @@ namespace GraphQLParser {
 		if (Peek(TokenKind::NAME)) {
 			AST::ASTNode definition = ParseNamedDefinition();
 
-			if (definition.)
-				//i) TODO
+			// TODO: Check if definition is null and do not return in such case
+			return definition;
 		}
 
 		throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
@@ -527,7 +527,7 @@ namespace GraphQLParser {
 		AST::GraphQLVariableDefinition definition;
 		definition.Variable = ParseVariable();
 		definition.Type = AdvanceThroughColonAndParseType();
-		definition.DefaultValue = SkipEqualsAndParseValueLiteral(); // TODO!
+		definition.DefaultValue = SkipEqualsAndParseValueLiteral();
 		definition.Location = GetLocation(start);
 
 		return definition;
@@ -747,6 +747,10 @@ namespace GraphQLParser {
 		}
 
 		return type;
+	}
+
+	AST::GraphQLValue ParserContext::SkipEqualsAndParseValueLiteral() {
+		return Skip(TokenKind::EQUALS) ? ParseValueLiteral(true) : AST::GraphQLValue();
 	}
 
 	AST::ASTNode ParserContext::ParseNamedDefinition() {

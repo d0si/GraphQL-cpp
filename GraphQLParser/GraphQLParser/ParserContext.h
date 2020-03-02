@@ -72,7 +72,7 @@ namespace GraphQLParser {
 		/*DONE*/AST::GraphQLName ParseName();
 		/*DONE*/AST::GraphQLComment ParseComment();
 		/*DONE*/std::vector<AST::ASTNode> ParseDefinitionsIfNotEOF();
-		AST::ASTNode ParseDefinition();
+		/*DONE*/AST::ASTNode ParseDefinition();
 		/*DONE*/AST::ASTNode ParseOperationDefinition();
 		/*DONE*/AST::OperationType ParseOperationType();
 		/*DONE*/AST::GraphQLDocument ParseDocument();
@@ -115,6 +115,7 @@ namespace GraphQLParser {
 
 		/*DONE*/AST::GraphQLType AdvanceThroughColonAndParseType();
 		/*DONE*/AST::GraphQLType ParseType();
+		/*DONE*/AST::GraphQLValue SkipEqualsAndParseValueLiteral();
 
 		/*DONE*/AST::ASTNode ParseNamedDefinition();
 		/*DONE*/AST::GraphQLFragmentDefinition ParseFragmentDefinition();

@@ -11,7 +11,7 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLVariableDefinition : public ASTNode {
 		public:
-			// TODO: object DefaultValue;
+			GraphQLValue DefaultValue;
 
 			ASTNodeKind Kind = ASTNodeKind::VariableDefinition;
 
