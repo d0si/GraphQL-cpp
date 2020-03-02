@@ -14,6 +14,12 @@
 #include <GraphQLParser/AST/GraphQLNamedType.h>
 #include <GraphQLParser/AST/GraphQLValue.h>
 #include <GraphQLParser/AST/GraphQLObjectField.h>
+#include <GraphQLParser/AST/GraphQLFragmentDefinition.h>
+#include <GraphQLParser/AST/GraphQLSchemaDefinition.h>
+#include <GraphQLParser/AST/GraphQLScalarTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLObjectTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLInterfaceTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLUnionTypeDefinition.h>
 
 namespace GraphQLParser {
 	class ParserContext {
@@ -38,6 +44,7 @@ namespace GraphQLParser {
 		/*DONE*/AST::ASTNode CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name);
 
 		/*DONE*/void Expect(TokenKind kind);
+		/*DONE*/void ExpectKeyword(std::string keyword);
 
 		/*DONE*/AST::GraphQLLocation GetLocation(int start);
 		/*DONE*/AST::GraphQLName GetName();
@@ -45,8 +52,11 @@ namespace GraphQLParser {
 		/*DONE*/std::vector<AST::ASTNode> ManyNode(TokenKind open, AST::ASTNode(*next)(ParserContext*), TokenKind close);
 		/*DONE*/std::vector<AST::GraphQLArgument> ManyArgument(TokenKind open, AST::GraphQLArgument(*next)(ParserContext*), TokenKind close);
 		/*DONE*/std::vector<AST::GraphQLVariableDefinition> ManyVariableDefinition(TokenKind open, AST::GraphQLVariableDefinition(*next)(ParserContext*), TokenKind close);
+		/*DONE*/std::vector<AST::GraphQLOperationTypeDefinition> ManyOperationTypeDefinition(TokenKind open, AST::GraphQLOperationTypeDefinition(*next)(ParserContext*), TokenKind close);
+		/*DONE*/std::vector<AST::GraphQLInputValueDefinition> ManyInputValueDefinition(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close);
 
 		/*DONE*/std::vector<AST::GraphQLValue> Any(TokenKind open, AST::GraphQLValue(*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close);
+		/*DONE*/std::vector<AST::GraphQLFieldDefinition> Any(TokenKind open, AST::GraphQLFieldDefinition(*next)(ParserContext*), TokenKind close);
 
 		/*DONE*/std::vector<AST::GraphQLArgument> ParseArguments();
 		/*DONE*/AST::GraphQLArgument ParseArgument();
@@ -100,7 +110,27 @@ namespace GraphQLParser {
 		/*DONE*/AST::GraphQLType AdvanceThroughColonAndParseType();
 		/*DONE*/AST::GraphQLType ParseType();
 
-		AST::ASTNode ParseNamedDefinition();
+		/*DONE*/AST::ASTNode ParseNamedDefinition();
+		/*DONE*/AST::GraphQLFragmentDefinition ParseFragmentDefinition();
+		/*DONE*/AST::GraphQLNamedType ExpectOnKeywordAndParseNamedType();
+
+		AST::GraphQLSchemaDefinition ParseSchemaDefinition();
+		/*DONE*/AST::GraphQLOperationTypeDefinition ParseOperationTypeDefinition();
+
+		/*DONE*/AST::GraphQLScalarTypeDefinition ParseScalarTypeDefinition();
+
+		/*DONE*/AST::GraphQLObjectTypeDefinition ParseObjectTypeDefinition();
+		/*DONE*/std::vector<AST::GraphQLNamedType> ParseImplementsInterfaces();
+		/*DONE*/AST::GraphQLFieldDefinition ParseFieldDefinition();
+		/*DONE*/std::vector<AST::GraphQLInputValueDefinition> ParseArgumentDefs();
+		/*DONE*/AST::GraphQLInputValueDefinition ParseInputValueDef();
+		/*DONE*/AST::GraphQLValue GetDefaultConstantValue();
+
+		/*DONE*/AST::GraphQLInterfaceTypeDefinition ParseInterfaceTypeDefinition();
+
+		/*DONE*/AST::GraphQLUnionTypeDefinition ParseUnionTypeDefinition();
+		/*DONE*/std::vector<AST::GraphQLNamedType> ParseUnionMembers();
+
 
 		/*DONE*/bool Peek(TokenKind kind);
 		/*DONE*/bool Skip(TokenKind kind);

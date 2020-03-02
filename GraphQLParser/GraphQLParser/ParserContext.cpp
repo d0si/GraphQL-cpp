@@ -81,6 +81,18 @@ namespace GraphQLParser {
 		}
 	}
 
+	void ParserContext::ExpectKeyword(std::string keyword) {
+		Token token = current_token;
+
+		if (token.Kind == TokenKind::NAME && keyword == token.Value) {
+			Advance();
+
+			return;
+		}
+
+		throw Exceptions::GraphQLSyntaxErrorException("Expected \"" + keyword + "\", found Name \"" + token.Value + "\"", source, current_token.Start);
+	}
+
 	AST::GraphQLLocation ParserContext::GetLocation(int start) {
 		return AST::GraphQLLocation(start, current_token.End);
 	}
@@ -137,6 +149,38 @@ namespace GraphQLParser {
 		return nodes;
 	}
 
+	std::vector<AST::GraphQLOperationTypeDefinition> ParserContext::ManyOperationTypeDefinition(TokenKind open, AST::GraphQLOperationTypeDefinition(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		std::vector<AST::GraphQLOperationTypeDefinition> nodes;
+
+		nodes.push_back(next(this));
+
+		while (!Skip(close)) {
+			nodes.push_back(next(this));
+		}
+
+		return nodes;
+	}
+
+	std::vector<AST::GraphQLInputValueDefinition> ParserContext::ManyInputValueDefinition(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		std::vector<AST::GraphQLInputValueDefinition> nodes;
+
+		nodes.push_back(next(this));
+
+		while (!Skip(close)) {
+			nodes.push_back(next(this));
+		}
+
+		return nodes;
+	}
+
 	std::vector<AST::GraphQLValue> ParserContext::Any(TokenKind open, AST::GraphQLValue(*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close) {
 		Expect(open);
 
@@ -146,6 +190,20 @@ namespace GraphQLParser {
 
 		while (!Skip(close)) {
 			nodes.push_back(next(this, is_constant));
+		}
+
+		return nodes;
+	}
+
+	std::vector<AST::GraphQLFieldDefinition> ParserContext::Any(TokenKind open, AST::GraphQLFieldDefinition(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		std::vector<AST::GraphQLFieldDefinition> nodes;
+
+		while (!Skip(close)) {
+			nodes.push_back(next(this));
 		}
 
 		return nodes;
@@ -674,7 +732,7 @@ namespace GraphQLParser {
 			return ParseSchemaDefinition();
 		}
 		else if (value == "scalar") {
-			return ParseScalarDefinition();
+			return ParseScalarTypeDefinition();
 		}
 		else if (value == "type") {
 			return ParseObjectTypeDefinition();
@@ -700,6 +758,218 @@ namespace GraphQLParser {
 		else {
 			return AST::ASTNode();
 		}
+	}
+
+	AST::GraphQLFragmentDefinition ParserContext::ParseFragmentDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+
+		ExpectKeyword("fragment");
+
+		AST::GraphQLFragmentDefinition definition;
+		definition.Comment = comment;
+		definition.Name = ParseFragmentName();
+		definition.TypeCondition = ExpectOnKeywordAndParseNamedType();
+		definition.Directives = ParseDirectives();
+		definition.SelectionSet = ParseSelectionSet();
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLNamedType ParserContext::ExpectOnKeywordAndParseNamedType() {
+		ExpectKeyword("on");
+
+		return ParseNamedType();
+	}
+
+	AST::GraphQLSchemaDefinition ParserContext::ParseSchemaDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+
+		ExpectKeyword("schema");
+
+		std::vector<AST::GraphQLDirective> directives = ParseDirectives();
+		auto operation_types = ManyOperationTypeDefinition(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLOperationTypeDefinition {
+			return context->ParseOperationTypeDefinition();
+			}, TokenKind::BRACE_R);
+
+		AST::GraphQLSchemaDefinition definition;
+		definition.Comment = comment;
+		definition.Directives = directives;
+		definition.OperationTypes = operation_types;
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLOperationTypeDefinition ParserContext::ParseOperationTypeDefinition() {
+		int start = current_token.Start;
+		AST::OperationType operation = ParseOperationType();
+
+		Expect(TokenKind::COLON);
+		AST::GraphQLNamedType type = ParseNamedType();
+
+		AST::GraphQLOperationTypeDefinition definition;
+		definition.Operation = operation;
+		definition.Type = type;
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLScalarTypeDefinition ParserContext::ParseScalarTypeDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+
+		ExpectKeyword("scalar");
+		AST::GraphQLName name = ParseName();
+		std::vector<AST::GraphQLDirective> directives = ParseDirectives();
+
+		AST::GraphQLScalarTypeDefinition definition;
+		definition.Comment = comment;
+		definition.Name = name;
+		definition.Directives = directives;
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLObjectTypeDefinition ParserContext::ParseObjectTypeDefinition() {
+		AST::GraphQLComment comment = GetComment();
+
+		int start = current_token.Start;
+		ExpectKeyword("type");
+
+		AST::GraphQLObjectTypeDefinition definition;
+		definition.Comment = comment;
+		definition.Name = ParseName();
+		definition.Interfaces = ParseImplementsInterfaces();
+		definition.Directives = ParseDirectives();
+		definition.Fields = Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
+			return context->ParseFieldDefinition();
+			}, TokenKind::BRACE_R);
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	std::vector<AST::GraphQLNamedType> ParserContext::ParseImplementsInterfaces() {
+		std::vector<AST::GraphQLNamedType> types;
+
+		if (current_token.Value == "implements") {
+			Advance();
+
+			do {
+				types.push_back(ParseNamedType());
+			} while (Peek(TokenKind::NAME));
+		}
+
+		return types;
+	}
+
+	AST::GraphQLFieldDefinition ParserContext::ParseFieldDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		AST::GraphQLName name = ParseName();
+		std::vector<AST::GraphQLInputValueDefinition> args = ParseArgumentDefs();
+		Expect(TokenKind::COLON);
+
+		AST::GraphQLFieldDefinition definition;
+		definition.Comment = comment;
+		definition.Name = name;
+		definition.Arguments = args;
+		definition.Type = ParseType();
+		definition.Directives = ParseDirectives();
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	std::vector<AST::GraphQLInputValueDefinition> ParserContext::ParseArgumentDefs() {
+		if (Peek(TokenKind::PAREN_L)) {
+			return ManyInputValueDefinition(TokenKind::PAREN_L, [](ParserContext* context) -> AST::GraphQLInputValueDefinition {
+				return context->ParseInputValueDef();
+				}, TokenKind::PAREN_R);
+		}
+
+		return std::vector<AST::GraphQLInputValueDefinition>();
+	}
+
+	AST::GraphQLInputValueDefinition ParserContext::ParseInputValueDef() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		AST::GraphQLName name = ParseName();
+		Expect(TokenKind::COLON);
+
+		AST::GraphQLInputValueDefinition definition;
+		definition.Comment = comment;
+		definition.Name = name;
+		definition.Type = ParseType();
+		definition.DefaultValue = GetDefaultConstantValue();
+		definition.Directives = ParseDirectives();
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLValue ParserContext::GetDefaultConstantValue() {
+		AST::GraphQLValue default_value;
+
+		if (Skip(TokenKind::EQUALS)) {
+			default_value = ParseConstantValue();
+		}
+
+		return default_value;
+	}
+
+	AST::GraphQLInterfaceTypeDefinition ParserContext::ParseInterfaceTypeDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		ExpectKeyword("interface");
+
+		AST::GraphQLInterfaceTypeDefinition definition;
+		definition.Comment = comment;
+		definition.Name = ParseName();
+		definition.Directives = ParseDirectives();
+		definition.Fields = Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
+			return context->ParseFieldDefinition();
+			}, TokenKind::BRACE_R);
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	AST::GraphQLUnionTypeDefinition ParserContext::ParseUnionTypeDefinition() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+		ExpectKeyword("union");
+
+		AST::GraphQLName name = ParseName();
+		std::vector<AST::GraphQLDirective> directives = ParseDirectives();
+		Expect(TokenKind::EQUALS);
+		std::vector<AST::GraphQLNamedType> types = ParseUnionMembers();
+
+		AST::GraphQLUnionTypeDefinition definition;
+		definition.Comment = comment;
+		definition.Name = name;
+		definition.Directives = directives;
+		definition.Types = types;
+		definition.Location = GetLocation(start);
+
+		return definition;
+	}
+
+	std::vector<AST::GraphQLNamedType> ParserContext::ParseUnionMembers() {
+		std::vector<AST::GraphQLNamedType> members;
+
+		Skip(TokenKind::PIPE);
+
+		do {
+			members.push_back(ParseNamedType());
+		} while (Skip(TokenKind::PIPE));
+
+		return members;
 	}
 
 	bool ParserContext::Peek(TokenKind kind) {
