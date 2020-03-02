@@ -1,4 +1,5 @@
 #include <GraphQLParser/Lexer1.h>
+#include <GraphQLParser/LexerContext.h>
 
 namespace GraphQLParser {
     Token Lexer::Lex(Source source) {
@@ -6,10 +7,8 @@ namespace GraphQLParser {
     }
 
     Token Lexer::Lex(Source source, int start) {
-        // TODO:
-        return Token(TokenKind::UNKNOWN, "", 0, 0);
-        //auto context = new LexerContext(source, start, Cache);
+        LexerContext context(source, start/*, Cache*/);
 
-        //return context.GetToken();
+        return context.GetToken();
     }
 }
