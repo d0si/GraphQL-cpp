@@ -40,8 +40,13 @@ namespace GraphQLParser {
 
 		/*NICE*/std::vector<AST::ASTNode> ManyNode(TokenKind open, std::vector<AST::ASTNode>(*next)(ParserContext*), TokenKind close);
 		/*NICE*/std::vector<AST::GraphQLArgument> ManyArgument(TokenKind open, std::vector<AST::GraphQLArgument>(*next)(ParserContext*), TokenKind close);
+		/*NICE*/std::vector<AST::GraphQLVariableDefinition> ManyVariableDefinition(TokenKind open, std::vector<AST::GraphQLVariableDefinition>(*next)(ParserContext*), TokenKind close);
 
-		std::vector<AST::GraphQLArgument> ParseArguments();
+		/*NICE*/std::vector<AST::GraphQLArgument> ParseArguments();
+		/*NICE*/AST::GraphQLArgument ParseArgument();
+		/*NICE*/AST::GraphQLValue ExpectColonAndParseValueLiteral(bool is_content);
+		AST::GraphQLValue ParseValueLiteral(bool is_constant);
+
 		/*NICE*/AST::GraphQLName ParseName();
 		/*NICE*/AST::GraphQLComment ParseComment();
 		/*NICE*/std::vector<AST::ASTNode> ParseDefinitionsIfNotEOF();
@@ -58,6 +63,12 @@ namespace GraphQLParser {
 
 		/*NICE*/AST::ASTNode ParseFieldSelection();
 		AST::GraphQLFieldSelection CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, AST::GraphQLComment comment);
+
+		std::vector<AST::GraphQLVariableDefinition> ParseVariableDefinitions();
+
+		/*NICE*/std::vector<AST::GraphQLDirective> ParseDirectives();
+		/*NICE*/AST::GraphQLDirective ParseDirective();
+
 
 		/*NICE*/bool Peek(TokenKind kind);
 		/*NICE*/bool Skip(TokenKind kind);

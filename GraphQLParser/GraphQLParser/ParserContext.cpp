@@ -120,6 +120,24 @@ namespace GraphQLParser {
 		return nodes;
 	}
 
+
+	std::vector<AST::GraphQLVariableDefinition> ParserContext::ManyVariableDefinition(TokenKind open, std::vector<AST::GraphQLVariableDefinition>(*next)(ParserContext*), TokenKind close) {
+		Expect(open);
+
+		ParseComment();
+
+		auto nodes = next(this);
+
+		while (!Skip(close)) {
+			auto nodes1 = next(this);
+			for (auto node : nodes1) {
+				nodes.push_back(node);
+			}
+		}
+
+		return nodes;
+	}
+
 	std::vector<AST::GraphQLArgument> ParserContext::ParseArguments() {
 		return Peek(TokenKind::PAREN_L) ?
 			ManyArgument(TokenKind::PAREN_L, [](ParserContext* context) -> AST::GraphQLArgument {
@@ -128,6 +146,60 @@ namespace GraphQLParser {
 				TokenKind::PAREN_R)
 			: std::vector<AST::GraphQLArgument>();
 	}
+
+	AST::GraphQLArgument ParserContext::ParseArgument() {
+		AST::GraphQLComment comment = GetComment();
+		int start = current_token.Start;
+
+		AST::GraphQLArgument argument;
+		argument.Comment = comment;
+		argument.Name = ParseName();
+		argument.Value = ExpectColonAndParseValueLiteral(false);
+		argument.Location = GetLocation(start);
+
+		return argument;
+	}
+
+	AST::GraphQLValue ParserContext::ExpectColonAndParseValueLiteral(bool is_constant) {
+		Expect(TokenKind::COLON);
+
+		return ParseValueLiteral(is_constant);
+	}
+
+	AST::GraphQLValue ParserContext::ParseValueLiteral(bool is_constant) {
+		AST::GraphQLValue value;
+
+		switch (current_token.Kind) {
+		case TokenKind::BRACKET_L:
+			value = ParseList(is_constant);
+			break;
+		case TokenKind::BRACE_L:
+			value = ParseObject(is_constant);
+			break;
+		case TokenKind::INT:
+			value = ParseInt(is_constant);
+			break;
+		case TokenKind::FLOAT:
+			value = ParseFloat(is_constant);
+			break;
+		case TokenKind::STRING:
+			value = ParseString(is_constant);
+			break;
+		case TokenKind::NAME:
+			value = ParseNameValue(is_constant);
+			break;
+		case TokenKind::DOLLAR:
+			if (!is_constant) {
+				value = ParseVariable();
+			}
+			break;
+		default:
+			throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
+		}
+
+		return value;
+	}
+
 
 	AST::GraphQLName ParserContext::ParseName() {
 		int start = current_token.Start;
@@ -301,6 +373,36 @@ namespace GraphQLParser {
 		selection_set.Location = GetLocation(start);
 
 		return selection_set;
+	}
+
+	std::vector<AST::GraphQLVariableDefinition> ParserContext::ParseVariableDefinitions() {
+		return Peek(TokenKind::PAREN_L) ?
+			ManyVariableDefinition(TokenKind::PAREN_L, [](ParserContext* context) {
+			context->ParseVariableDefinition()
+				}, TokenKind::PAREN_R)
+			: std::vector<AST::GraphQLVariableDefinition>();
+	}
+
+	std::vector<AST::GraphQLDirective> ParserContext::ParseDirectives() {
+		std::vector<AST::GraphQLDirective> directives;
+
+		while (Peek(TokenKind::AT)) {
+			directives.push_back(ParseDirective());
+		}
+
+		return directives;
+	}
+
+	AST::GraphQLDirective ParserContext::ParseDirective() {
+		int start = current_token.Start;
+		Expect(TokenKind::AT);
+		
+		AST::GraphQLDirective directive;
+		directive.Name = ParseName();
+		directive.Arguments = ParseArguments();
+		directive.Location = GetLocation(start);
+
+		return directive;
 	}
 
 	bool ParserContext::Peek(TokenKind kind) {
