@@ -1,4 +1,5 @@
 #include <GraphQL/Types/Schema.h>
+#include <GraphQL/Utilities/SchemaBuilder.h>
 
 namespace GraphQL {
 	namespace Types {
@@ -7,9 +8,5 @@ namespace GraphQL {
 
 			return builder.Build(type_definitions);
 		}
-	}
-
-	void run() {
-		Types::Schema::For("type Query { hello: String }");
 	}
 }

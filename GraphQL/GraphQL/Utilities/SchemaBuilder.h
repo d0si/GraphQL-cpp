@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <GraphQL/Types/Schema.h>
+#include <GraphQL/Types/ISchema.h>
 #include <GraphQLParser/AST/GraphQLDocument.h>
 
 namespace GraphQL {
@@ -11,6 +11,8 @@ namespace GraphQL {
 			GraphQL::Types::ISchema Build(std::string type_definitions);
 
 			GraphQLParser::AST::GraphQLDocument Parse(std::string document);
+
+			void Validate(GraphQLParser::AST::GraphQLDocument document);
 		};
 	}
 }

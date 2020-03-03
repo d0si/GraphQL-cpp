@@ -152,6 +152,7 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GraphQL\Types\ISchema.h" />
     <ClInclude Include="GraphQL\Types\Schema.h" />
     <ClInclude Include="GraphQL\Utilities\SchemaBuilder.h" />
   </ItemGroup>
