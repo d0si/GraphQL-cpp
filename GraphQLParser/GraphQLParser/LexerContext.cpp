@@ -170,7 +170,7 @@ namespace GraphQLParser {
 			throw Exceptions::GraphQLSyntaxErrorException(error_message, source, current_index);
 		}
 
-		code = NextCode();
+		code = next_code;
 		if (code == '.') {
 			is_float = true;
 			code = ReadDigitsFromOwnSource(NextCode());
