@@ -9,9 +9,9 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLSchemaDefinition : public ASTNode {
 		public:
-			std::vector<GraphQLDirective> Directives;
+			GraphQLSchemaDefinition(std::vector<GraphQLDirective> directives, std::vector<GraphQLOperationTypeDefinition> operation_types);
 
-			ASTNodeKind Kind = ASTNodeKind::SchemaDefinition;
+			std::vector<GraphQLDirective> Directives;
 
 			std::vector<GraphQLOperationTypeDefinition> OperationTypes;
 		};

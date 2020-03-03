@@ -7,7 +7,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLSelectionSet : public ASTNode {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::SelectionSet;
+			GraphQLSelectionSet();
+			GraphQLSelectionSet(std::vector<ASTNode> selections);
 
 			std::vector<ASTNode> Selections;
 		};

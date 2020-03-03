@@ -7,7 +7,7 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLTypeExtensionDefinition : public GraphQLTypeDefinition {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::TypeExtensionDefinition;
+			GraphQLTypeExtensionDefinition(GraphQLName name, GraphQLObjectTypeDefinition definition);
 
 			GraphQLObjectTypeDefinition Definition;
 		};

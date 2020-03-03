@@ -7,7 +7,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLOperationTypeDefinition : public ASTNode {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::OperationTypeDefinition;
+			GraphQLOperationTypeDefinition();
+			GraphQLOperationTypeDefinition(OperationType operation, GraphQLNamedType type);
 
 			OperationType Operation;
 

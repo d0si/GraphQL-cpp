@@ -7,7 +7,7 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLVariable : public GraphQLValue {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::Variable;
+			GraphQLVariable(GraphQLName name);
 
 			GraphQLName Name;
 		};

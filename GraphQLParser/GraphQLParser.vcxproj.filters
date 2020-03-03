@@ -254,5 +254,59 @@
     <ClCompile Include="GraphQLParser\AST\GraphQLInterfaceTypeDefinition.cpp">
       <Filter>Source Files\AST</Filter>
     </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLType.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLListValue.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLValue.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLName.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLNonNullType.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLObjectField.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLObjectTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLObjectValue.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLOperationDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLOperationTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLScalarTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLScalarValue.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLSchemaDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLSelectionSet.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLTypeExtensionDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLUnionTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLVariable.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLVariableDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

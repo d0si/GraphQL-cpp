@@ -6,11 +6,12 @@
 
 namespace GraphQLParser {
 	namespace AST {
-		class GraphQLScalarTypeDefinition: public GraphQLTypeDefinition {
+		class GraphQLScalarTypeDefinition : public GraphQLTypeDefinition {
 		public:
-			std::vector<GraphQLDirective> Directives;
+			GraphQLScalarTypeDefinition();
+			GraphQLScalarTypeDefinition(GraphQLName name, std::vector<GraphQLDirective> directives);
 
-			ASTNodeKind Kind = ASTNodeKind::ScalarTypeDefinition;
+			std::vector<GraphQLDirective> Directives;
 		};
 	}
 }
