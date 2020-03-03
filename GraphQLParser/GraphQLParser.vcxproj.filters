@@ -221,5 +221,20 @@
     <ClCompile Include="GraphQLParser\AST\GraphQLDirectiveDefinition.cpp">
       <Filter>Source Files\AST</Filter>
     </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLDocument.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLEnumTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLEnumValueDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLFieldDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLFieldSelection.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

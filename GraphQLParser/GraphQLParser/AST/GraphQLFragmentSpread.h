@@ -8,11 +8,12 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLFragmentSpread : public ASTNode {
 		public:
-			std::vector<GraphQLDirective> Directives;
-
-			ASTNodeKind Kind = ASTNodeKind::FragmentSpread;
+			GraphQLFragmentSpread();
+			GraphQLFragmentSpread(GraphQLName name, std::vector<GraphQLDirective> directives);
 
 			GraphQLName Name;
+
+			std::vector<GraphQLDirective> Directives;
 		};
 	}
 }

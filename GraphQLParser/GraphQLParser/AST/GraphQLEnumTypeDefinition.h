@@ -9,8 +9,9 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLEnumTypeDefinition : public GraphQLTypeDefinition {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::EnumTypeDefinition;
-			
+			GraphQLEnumTypeDefinition();
+			GraphQLEnumTypeDefinition(GraphQLName name, std::vector<GraphQLDirective> directives, std::vector<GraphQLEnumValueDefinition> values);
+
 			std::vector<GraphQLDirective> Directives;
 
 			std::vector<GraphQLEnumValueDefinition> Values;

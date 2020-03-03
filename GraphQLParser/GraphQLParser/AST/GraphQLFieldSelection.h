@@ -11,15 +11,21 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLFieldSelection : public ASTNode {
 		public:
+			GraphQLFieldSelection();
+			GraphQLFieldSelection(
+				GraphQLName alias,
+				GraphQLName name,
+				std::vector<GraphQLArgument> arguments,
+				std::vector<GraphQLDirective> directives,
+				GraphQLSelectionSet selection_set);
+
 			GraphQLName Alias;
+
+			GraphQLName Name;
 
 			std::vector<GraphQLArgument> Arguments;
 
 			std::vector<GraphQLDirective> Directives;
-
-			ASTNodeKind Kind = ASTNodeKind::Field;
-
-			GraphQLName Name;
 
 			GraphQLSelectionSet SelectionSet;
 		};

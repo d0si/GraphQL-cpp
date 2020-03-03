@@ -10,9 +10,12 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLInlineFragment : public ASTNode {
 		public:
-			std::vector<GraphQLDirective> Directives;
+			GraphQLInlineFragment();
+			GraphQLInlineFragment(ASTNodeKind kind);
+			GraphQLInlineFragment(GraphQLNamedType type_condition, std::vector<GraphQLDirective> directives, GraphQLSelectionSet selection_set);
+			GraphQLInlineFragment(ASTNodeKind kind, GraphQLNamedType type_condition, std::vector<GraphQLDirective> directives, GraphQLSelectionSet selection_set);
 
-			ASTNodeKind Kind = ASTNodeKind::InlineFragment;
+			std::vector<GraphQLDirective> Directives;
 
 			GraphQLSelectionSet SelectionSet;
 
