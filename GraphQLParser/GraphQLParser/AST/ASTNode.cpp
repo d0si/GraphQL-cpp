@@ -3,7 +3,15 @@
 
 namespace GraphQLParser {
 	namespace AST {
-		ASTNode::ASTNode() : Location(0, 0) {
+		ASTNode::ASTNode() : ASTNode(ASTNodeKind::Name) {
+
+		}
+
+		ASTNode::ASTNode(ASTNodeKind kind) : ASTNode(kind, GraphQLLocation(0, 0)) {
+
+		}
+
+		ASTNode::ASTNode(ASTNodeKind kind, GraphQLLocation location) : Kind(kind), Location(location) {
 
 		}
 

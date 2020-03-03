@@ -2,7 +2,6 @@
 
 #include <GraphQLParser/AST/Enums.h>
 #include <GraphQLParser/AST/GraphQLLocation.h>
-//#include <GraphQLParser/AST/GraphQLComment.h>
 
 namespace GraphQLParser {
 	namespace AST {
@@ -11,6 +10,8 @@ namespace GraphQLParser {
 		class ASTNode {
 		public:
 			ASTNode();
+			ASTNode(ASTNodeKind kind);
+			ASTNode(ASTNodeKind kind, GraphQLLocation location);
 			~ASTNode();
 			
 			void set_comment(GraphQLComment comment);
