@@ -2,7 +2,7 @@
 
 namespace GraphQLParser {
 	namespace AST {
-		GraphQLListType::GraphQLListType(GraphQLType type) : Type(type) {
+		GraphQLListType::GraphQLListType(GraphQLType type) : GraphQLType(ASTNodeKind::ListType), Type(type) {
 
 		}
 	}

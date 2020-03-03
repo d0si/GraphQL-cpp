@@ -8,8 +8,6 @@ namespace GraphQLParser {
 		public:
 			GraphQLListType(GraphQLType type);
 
-			ASTNodeKind Kind = ASTNodeKind::ListType;
-
 			GraphQLType Type;
 		};
 	}

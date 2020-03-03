@@ -10,13 +10,15 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLInputValueDefinition : public GraphQLTypeDefinition {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::InputValueDefinition;
+			GraphQLInputValueDefinition();
+			GraphQLInputValueDefinition(GraphQLName name, GraphQLType type, GraphQLValue default_value, std::vector<GraphQLDirective> directives);
+
+			GraphQLType Type;
 
 			GraphQLValue DefaultValue;
 
 			std::vector<GraphQLDirective> Directives;
 
-			GraphQLType Type;
 		};
 	}
 }

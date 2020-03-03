@@ -6,7 +6,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLNonNullType : public GraphQLType {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::NonNullType;
+			GraphQLNonNullType();
+			GraphQLNonNullType(GraphQLType type);
 
 			GraphQLType Type;
 		};

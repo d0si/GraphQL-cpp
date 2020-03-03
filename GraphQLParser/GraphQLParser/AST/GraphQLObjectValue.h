@@ -8,9 +8,10 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLObjectValue : public GraphQLValue {
 		public:
-			std::vector<GraphQLObjectField> Fields;
+			GraphQLObjectValue();
+			GraphQLObjectValue(std::vector<GraphQLObjectField> fields);
 
-			ASTNodeKind Kind = ASTNodeKind::ObjectValue;
+			std::vector<GraphQLObjectField> Fields;
 		};
 	}
 }

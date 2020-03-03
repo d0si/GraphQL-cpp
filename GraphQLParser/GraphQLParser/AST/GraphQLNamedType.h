@@ -8,7 +8,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLNamedType : public GraphQLType {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::NamedType;
+			GraphQLNamedType();
+			GraphQLNamedType(GraphQLName name);
 
 			GraphQLName Name;
 

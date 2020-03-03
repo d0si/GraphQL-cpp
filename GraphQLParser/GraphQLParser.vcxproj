@@ -79,6 +79,12 @@
     <ClCompile Include="GraphQLParser\AST\GraphQLEnumValueDefinition.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLFieldDefinition.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLFieldSelection.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLFragmentDefinition.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLFragmentSpread.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLInlineFragment.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLInputObjectTypeDefinition.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLInputValueDefinition.cpp" />
+    <ClCompile Include="GraphQLParser\AST\GraphQLInterfaceTypeDefinition.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLListType.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLLocation.cpp" />
     <ClCompile Include="GraphQLParser\AST\GraphQLNamedType.cpp" />

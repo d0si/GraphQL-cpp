@@ -236,5 +236,23 @@
     <ClCompile Include="GraphQLParser\AST\GraphQLFieldSelection.cpp">
       <Filter>Source Files\AST</Filter>
     </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLFragmentDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLInlineFragment.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLFragmentSpread.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLInputObjectTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLInputValueDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphQLParser\AST\GraphQLInterfaceTypeDefinition.cpp">
+      <Filter>Source Files\AST</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

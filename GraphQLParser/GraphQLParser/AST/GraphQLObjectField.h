@@ -9,7 +9,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLObjectField: public ASTNode {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::ObjectField;
+			GraphQLObjectField();
+			GraphQLObjectField(GraphQLName name, GraphQLValue value);
 
 			GraphQLName Name;
 

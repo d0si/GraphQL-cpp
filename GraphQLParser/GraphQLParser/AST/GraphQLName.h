@@ -7,7 +7,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLName : public ASTNode {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::Name;
+			GraphQLName();
+			GraphQLName(std::string value);
 
 			std::string Value;
 		};
