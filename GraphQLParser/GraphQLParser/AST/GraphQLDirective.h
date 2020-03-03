@@ -9,11 +9,13 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLDirective : public ASTNode {
 		public:
-			std::vector<GraphQLArgument> Arguments;
-
-			ASTNodeKind Kind = ASTNodeKind::Directive;
+			GraphQLDirective();
+			GraphQLDirective(GraphQLName name);
+			GraphQLDirective(GraphQLName name, std::vector<GraphQLArgument> arguments);
 
 			GraphQLName Name;
+
+			std::vector<GraphQLArgument> Arguments;
 		};
 	}
 }

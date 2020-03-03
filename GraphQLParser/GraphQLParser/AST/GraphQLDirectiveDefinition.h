@@ -8,15 +8,14 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLDirectiveDefinition : public GraphQLTypeDefinition {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::DirectiveDefinition;
+			GraphQLDirectiveDefinition();
+			GraphQLDirectiveDefinition(GraphQLName name, bool repeatable, std::vector<GraphQLInputValueDefinition> arguments, std::vector<GraphQLName> locations);
+
+			bool Repeatable;
 
 			std::vector<GraphQLInputValueDefinition> Arguments;
 
-			std::vector<GraphQLInputValueDefinition> Definitions;
-
 			std::vector<GraphQLName> Locations;
-
-			bool Repeatable;
 		};
 	}
 }

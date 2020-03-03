@@ -331,8 +331,7 @@ namespace GraphQLParser {
 			text = text.substr(0, text.length() - 2);
 		}
 
-		AST::GraphQLComment comment;
-		comment.Text = text;
+		AST::GraphQLComment comment(text);
 		comment.Location.Start = start;
 		comment.Location.End = end;
 
@@ -546,9 +545,7 @@ namespace GraphQLParser {
 		int start = current_token.Start;
 		Expect(TokenKind::AT);
 
-		AST::GraphQLDirective directive;
-		directive.Name = ParseName();
-		directive.Arguments = ParseArguments();
+		AST::GraphQLDirective directive(ParseName(), ParseArguments());
 		directive.Location = GetLocation(start);
 
 		return directive;
@@ -1079,12 +1076,8 @@ namespace GraphQLParser {
 		ExpectKeyword("on");
 		auto locations = ParseDirectiveLocations();
 
-		AST::GraphQLDirectiveDefinition definition;
+		AST::GraphQLDirectiveDefinition definition(name, repeatable, args, locations);
 		definition.set_comment(comment);
-		definition.Name = name;
-		definition.Repeatable = repeatable;
-		definition.Arguments = args;
-		definition.Locations = locations;
 		definition.Location = GetLocation(start);
 
 		return definition;

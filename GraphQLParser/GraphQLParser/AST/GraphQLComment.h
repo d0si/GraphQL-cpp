@@ -7,7 +7,8 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLComment : public ASTNode {
 		public:
-			ASTNodeKind Kind = ASTNodeKind::Comment;
+			GraphQLComment();
+			GraphQLComment(std::string text);
 
 			std::string Text;
 		};
