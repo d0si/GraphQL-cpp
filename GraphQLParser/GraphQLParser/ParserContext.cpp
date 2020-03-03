@@ -252,10 +252,8 @@ namespace GraphQLParser {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 
-		AST::GraphQLArgument argument;
+		AST::GraphQLArgument argument(ParseName(), ExpectColonAndParseValueLiteral(false));
 		argument.set_comment(comment);
-		argument.Name = ParseName();
-		argument.Value = ExpectColonAndParseValueLiteral(false);
 		argument.Location = GetLocation(start);
 
 		return argument;
