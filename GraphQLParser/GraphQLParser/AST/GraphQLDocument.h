@@ -8,9 +8,9 @@ namespace GraphQLParser {
 		class GraphQLDocument : public ASTNode {
 		public:
 			GraphQLDocument();
-			GraphQLDocument(std::vector<ASTNode> definitions);
+			GraphQLDocument(std::vector<ASTNode*> definitions);
 
-			std::vector<ASTNode> Definitions;
+			std::vector<ASTNode*> Definitions;
 		};
 	}
 }

@@ -33,7 +33,7 @@ namespace GraphQLParser {
 		current_token = lexer.Lex(source, current_token.End);
 	}
 
-	AST::GraphQLDocument ParserContext::CreateDocument(int start, std::vector<AST::ASTNode> definitions) {
+	AST::GraphQLDocument ParserContext::CreateDocument(int start, std::vector<AST::ASTNode*> definitions) {
 		AST::GraphQLDocument document(definitions);
 
 		document.Location.Start = start;
@@ -42,30 +42,30 @@ namespace GraphQLParser {
 		return document;
 	}
 
-	AST::ASTNode ParserContext::CreateOperationDefinition(int start) {
+	AST::ASTNode* ParserContext::CreateOperationDefinition(int start) {
 		AST::GraphQLComment comment = GetComment();
 
-		AST::GraphQLOperationDefinition definition(AST::OperationType::Query, ParseSelectionSet());
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		AST::GraphQLOperationDefinition* definition = new AST::GraphQLOperationDefinition(AST::OperationType::Query, ParseSelectionSet());
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
-		return definition;
+		return dynamic_cast<AST::ASTNode*>(definition);
 	}
 
-	AST::ASTNode ParserContext::CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name) {
+	AST::ASTNode* ParserContext::CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name) {
 		AST::GraphQLComment comment = GetComment();
 
-		AST::GraphQLOperationDefinition definition(
+		AST::GraphQLOperationDefinition* definition = new AST::GraphQLOperationDefinition(
 			operation,
 			name,
 			ParseVariableDefinitions(),
 			ParseDirectives(),
 			ParseSelectionSet()
 		);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
-		return definition;
+		return dynamic_cast<AST::ASTNode*>(definition);
 	}
 
 	void ParserContext::Expect(TokenKind kind) {
@@ -337,8 +337,8 @@ namespace GraphQLParser {
 		return comment;
 	}
 
-	std::vector<AST::ASTNode> ParserContext::ParseDefinitionsIfNotEOF() {
-		std::vector<AST::ASTNode> result;
+	std::vector<AST::ASTNode*> ParserContext::ParseDefinitionsIfNotEOF() {
+		std::vector<AST::ASTNode*> result;
 
 		if (current_token.Kind != TokenKind::EOF_) {
 			do {
@@ -349,7 +349,7 @@ namespace GraphQLParser {
 		return result;
 	}
 
-	AST::ASTNode ParserContext::ParseDefinition() {
+	AST::ASTNode* ParserContext::ParseDefinition() {
 		ParseComment();
 
 		if (Peek(TokenKind::BRACE_L)) {
@@ -357,16 +357,17 @@ namespace GraphQLParser {
 		}
 
 		if (Peek(TokenKind::NAME)) {
-			AST::ASTNode definition = ParseNamedDefinition();
+			AST::ASTNode* definition = ParseNamedDefinition();
 
-			// TODO: Check if definition is null and do not return in such case
-			return definition;
+			if (definition != nullptr) {
+				return definition;
+			}
 		}
 
 		throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
 	}
 
-	AST::ASTNode ParserContext::ParseOperationDefinition() {
+	AST::ASTNode* ParserContext::ParseOperationDefinition() {
 		int start = current_token.Start;
 
 		if (Peek(TokenKind::BRACE_L)) {
@@ -393,7 +394,7 @@ namespace GraphQLParser {
 
 	AST::GraphQLDocument ParserContext::ParseDocument() {
 		int start = current_token.Start;
-		auto definitions = ParseDefinitionsIfNotEOF();
+		std::vector<AST::ASTNode*> definitions = ParseDefinitionsIfNotEOF();
 
 		return CreateDocument(start, definitions);
 	}
@@ -729,61 +730,61 @@ namespace GraphQLParser {
 		return Skip(TokenKind::EQUALS) ? ParseValueLiteral(true) : AST::GraphQLValue();
 	}
 
-	AST::ASTNode ParserContext::ParseNamedDefinition() {
+	AST::ASTNode* ParserContext::ParseNamedDefinition() {
 		std::string value = current_token.Value;
 
 		if (value == "query" || value == "mutation" || value == "subscription") {
 			return ParseOperationDefinition();
 		}
 		else if (value == "fragment") {
-			return ParseFragmentDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseFragmentDefinition());
 		}
 		else if (value == "schema") {
-			return ParseSchemaDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseSchemaDefinition());
 		}
 		else if (value == "scalar") {
-			return ParseScalarTypeDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseScalarTypeDefinition());
 		}
 		else if (value == "type") {
-			return ParseObjectTypeDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseObjectTypeDefinition());
 		}
 		else if (value == "interface") {
-			return ParseInterfaceTypeDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseInterfaceTypeDefinition());
 		}
 		else if (value == "union") {
-			return ParseUnionTypeDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseUnionTypeDefinition());
 		}
 		else if (value == "enum") {
-			return ParseEnumTypeDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseEnumTypeDefinition());
 		}
 		else if (value == "input") {
-			return ParseInputObjectTypeDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseInputObjectTypeDefinition());
 		}
 		else if (value == "extend") {
-			return ParseTypeExtensionDefinition();
+			return dynamic_cast<AST::ASTNode*>(ParseTypeExtensionDefinition());
 		}
 		else if (value == "directive") {
 			return ParseDirectiveDefinition();
 		}
 		else {
-			return AST::ASTNode();
+			return nullptr;
 		}
 	}
 
-	AST::GraphQLFragmentDefinition ParserContext::ParseFragmentDefinition() {
+	AST::GraphQLFragmentDefinition* ParserContext::ParseFragmentDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 
 		ExpectKeyword("fragment");
 
-		AST::GraphQLFragmentDefinition definition(
+		AST::GraphQLFragmentDefinition* definition = new AST::GraphQLFragmentDefinition(
 			ParseFragmentName(),
 			ExpectOnKeywordAndParseNamedType(),
 			ParseDirectives(),
 			ParseSelectionSet()
 		);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
@@ -794,7 +795,7 @@ namespace GraphQLParser {
 		return ParseNamedType();
 	}
 
-	AST::GraphQLSchemaDefinition ParserContext::ParseSchemaDefinition() {
+	AST::GraphQLSchemaDefinition* ParserContext::ParseSchemaDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 
@@ -805,9 +806,9 @@ namespace GraphQLParser {
 			return context->ParseOperationTypeDefinition();
 			}, TokenKind::BRACE_R);
 
-		AST::GraphQLSchemaDefinition definition(directives, operation_types);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		AST::GraphQLSchemaDefinition* definition = new AST::GraphQLSchemaDefinition(directives, operation_types);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
@@ -825,7 +826,7 @@ namespace GraphQLParser {
 		return definition;
 	}
 
-	AST::GraphQLScalarTypeDefinition ParserContext::ParseScalarTypeDefinition() {
+	AST::GraphQLScalarTypeDefinition* ParserContext::ParseScalarTypeDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 
@@ -833,20 +834,20 @@ namespace GraphQLParser {
 		AST::GraphQLName name = ParseName();
 		std::vector<AST::GraphQLDirective> directives = ParseDirectives();
 
-		AST::GraphQLScalarTypeDefinition definition(name, directives);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		AST::GraphQLScalarTypeDefinition* definition = new AST::GraphQLScalarTypeDefinition(name, directives);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
 
-	AST::GraphQLObjectTypeDefinition ParserContext::ParseObjectTypeDefinition() {
+	AST::GraphQLObjectTypeDefinition* ParserContext::ParseObjectTypeDefinition() {
 		AST::GraphQLComment comment = GetComment();
 
 		int start = current_token.Start;
 		ExpectKeyword("type");
 
-		AST::GraphQLObjectTypeDefinition definition(
+		AST::GraphQLObjectTypeDefinition* definition = new AST::GraphQLObjectTypeDefinition(
 			ParseName(),
 			ParseImplementsInterfaces(),
 			ParseDirectives(),
@@ -854,8 +855,8 @@ namespace GraphQLParser {
 				return context->ParseFieldDefinition();
 				}, TokenKind::BRACE_R)
 		);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
@@ -921,25 +922,25 @@ namespace GraphQLParser {
 		return default_value;
 	}
 
-	AST::GraphQLInterfaceTypeDefinition ParserContext::ParseInterfaceTypeDefinition() {
+	AST::GraphQLInterfaceTypeDefinition* ParserContext::ParseInterfaceTypeDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("interface");
 
-		AST::GraphQLInterfaceTypeDefinition definition(
+		AST::GraphQLInterfaceTypeDefinition* definition = new AST::GraphQLInterfaceTypeDefinition(
 			ParseName(),
 			ParseDirectives(),
 			Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
 				return context->ParseFieldDefinition();
 				}, TokenKind::BRACE_R)
 		);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
 
-	AST::GraphQLUnionTypeDefinition ParserContext::ParseUnionTypeDefinition() {
+	AST::GraphQLUnionTypeDefinition* ParserContext::ParseUnionTypeDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("union");
@@ -949,9 +950,9 @@ namespace GraphQLParser {
 		Expect(TokenKind::EQUALS);
 		std::vector<AST::GraphQLNamedType> types = ParseUnionMembers();
 
-		AST::GraphQLUnionTypeDefinition definition(name, directives, types);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		AST::GraphQLUnionTypeDefinition* definition = new AST::GraphQLUnionTypeDefinition(name, directives, types);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
@@ -968,20 +969,20 @@ namespace GraphQLParser {
 		return members;
 	}
 
-	AST::GraphQLEnumTypeDefinition ParserContext::ParseEnumTypeDefinition() {
+	AST::GraphQLEnumTypeDefinition* ParserContext::ParseEnumTypeDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("enum");
 
-		AST::GraphQLEnumTypeDefinition definition(
+		AST::GraphQLEnumTypeDefinition* definition = new AST::GraphQLEnumTypeDefinition(
 			ParseName(),
 			ParseDirectives(),
 			ManyEnumValueDefinition(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLEnumValueDefinition {
 				return context->ParseEnumValueDefinition();
 				}, TokenKind::BRACE_R)
 		);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
@@ -997,38 +998,38 @@ namespace GraphQLParser {
 		return definition;
 	}
 
-	AST::GraphQLInputObjectTypeDefinition ParserContext::ParseInputObjectTypeDefinition() {
+	AST::GraphQLInputObjectTypeDefinition* ParserContext::ParseInputObjectTypeDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("input");
 
-		AST::GraphQLInputObjectTypeDefinition definition(
+		AST::GraphQLInputObjectTypeDefinition* definition = new AST::GraphQLInputObjectTypeDefinition(
 			ParseName(),
 			ParseDirectives(),
 			Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLInputValueDefinition {
 				return context->ParseInputValueDef();
 				}, TokenKind::BRACE_R)
 		);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
 
-	AST::GraphQLTypeExtensionDefinition ParserContext::ParseTypeExtensionDefinition() {
+	AST::GraphQLTypeExtensionDefinition* ParserContext::ParseTypeExtensionDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("extend");
-		AST::GraphQLObjectTypeDefinition type_definition = ParseObjectTypeDefinition();
+		AST::GraphQLObjectTypeDefinition* type_definition = ParseObjectTypeDefinition();
 
-		AST::GraphQLTypeExtensionDefinition definition(type_definition.Name, type_definition);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		AST::GraphQLTypeExtensionDefinition* definition = new AST::GraphQLTypeExtensionDefinition(type_definition->Name, type_definition);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
 
-	AST::GraphQLDirectiveDefinition ParserContext::ParseDirectiveDefinition() {
+	AST::GraphQLDirectiveDefinition* ParserContext::ParseDirectiveDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("directive");
@@ -1040,9 +1041,9 @@ namespace GraphQLParser {
 		ExpectKeyword("on");
 		auto locations = ParseDirectiveLocations();
 
-		AST::GraphQLDirectiveDefinition definition(name, repeatable, args, locations);
-		definition.set_comment(comment);
-		definition.Location = GetLocation(start);
+		AST::GraphQLDirectiveDefinition* definition = new AST::GraphQLDirectiveDefinition(name, repeatable, args, locations);
+		definition->set_comment(comment);
+		definition->Location = GetLocation(start);
 
 		return definition;
 	}
