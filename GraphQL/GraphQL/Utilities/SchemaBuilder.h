@@ -10,9 +10,12 @@ namespace GraphQL {
 		public:
 			GraphQL::Types::ISchema Build(std::string type_definitions);
 
+		private:
 			GraphQLParser::AST::GraphQLDocument Parse(std::string document);
 
 			void Validate(GraphQLParser::AST::GraphQLDocument document);
+
+			Types::ISchema BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document);
 		};
 	}
 }

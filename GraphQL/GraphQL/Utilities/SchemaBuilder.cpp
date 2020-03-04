@@ -1,4 +1,5 @@
 #include <GraphQL/Utilities/SchemaBuilder.h>
+#include <set>
 #include <GraphQLParser/Lexer1.h>
 #include <GraphQLParser/Parser.h>
 #include <GraphQLParser/Source.h>
@@ -16,24 +17,42 @@ namespace GraphQL {
 		}
 
 		GraphQLParser::AST::GraphQLDocument SchemaBuilder::Parse(std::string document) {
-			auto lexer = GraphQLParser::Lexer();
-			auto parser = GraphQLParser::Parser(lexer);
+			auto parser = GraphQLParser::Parser(GraphQLParser::Lexer());
 
 			return parser.Parse(GraphQLParser::Source(document));
 		}
 
 		void SchemaBuilder::Validate(GraphQLParser::AST::GraphQLDocument document) {
-			std::vector<std::pair<std::string, GraphQLParser::AST::GraphQLTypeDefinition>> definitions_by_name;
+			std::set<std::string> definitions;
+			std::set<std::string> duplicates;
+			
 			for (auto def : document.Definitions) {
-				if (def.Kind == GraphQLParser::AST::ASTNodeKind::TypeExtensionDefinition) {
-					GraphQLParser::AST::GraphQLTypeExtensionDefinition definition = ;
-
-					std::pair<std::string, GraphQLParser::AST::GraphQLTypeDefinition> definition_pair;
-					definition_pair.first = definition.Name.Value;
-					definition_pair.second = definition;
-					definitions_by_name.push_back(definition_pair);
+				if (def->Kind == GraphQLParser::AST::ASTNodeKind::TypeExtensionDefinition) {
+					auto definition = static_cast<GraphQLParser::AST::GraphQLTypeExtensionDefinition*>(def);
+					auto definition_name = definition->Name.Value;
+					
+					if (definitions.count(definition_name) > 0) {
+						duplicates.insert(definition_name);
+					}
+					else {
+						definitions.insert(definition_name);
+					}
 				}
 			}
+
+			if (duplicates.size() > 0) {
+				std::string error_mesasge = "All types within a GraphQL schema must have unique names. Following types were redefined: ";
+				for (auto e : duplicates) {
+					error_mesasge += e + ", ";
+				}
+				error_mesasge = error_mesasge.substr(0, error_mesasge.length() - 2);
+
+				throw std::exception(error_mesasge.c_str());
+			}
+		}
+
+		Types::ISchema SchemaBuilder::BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document) {
+			throw std::exception("Not implemented");
 		}
 	}
 }
