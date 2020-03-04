@@ -381,6 +381,298 @@ namespace GraphQLParserTests {
 		}
 
 
+		TEST_METHOD(Lex_SimpleStringToken_HasCorrectEnd) {
+			auto token = GetSimpleStringTokenLexer();
+			Assert::AreEqual(5, token.End);
+		}
+
+		TEST_METHOD(Lex_SimpleStringToken_HasCorrectKind) {
+			auto token = GetSimpleStringTokenLexer();
+			Assert::IsTrue(TokenKind::STRING == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SimpleStringToken_HasCorrectStart) {
+			auto token = GetSimpleStringTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SimpleStringToken_HasCorrectValue) {
+			auto token = GetSimpleStringTokenLexer();
+			Assert::AreEqual(std::string("str"), token.Value);
+		}
+
+
+		TEST_METHOD(Lex_SingleDecimalIntToken_HasCorrectEnd) {
+			auto token = GetSingleDecimalIntTokenLexer();
+			Assert::AreEqual(1, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleDecimalIntToken_HasIntKind) {
+			auto token = GetSingleDecimalIntTokenLexer();
+			Assert::IsTrue(TokenKind::INT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleDecimalIntToken_HasCorrectStart) {
+			auto token = GetSingleDecimalIntTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleDecimalIntToken_HasCorrectValue) {
+			auto token = GetSingleDecimalIntTokenLexer();
+			Assert::AreEqual(std::string("0"), token.Value);
+		}
+
+
+		TEST_METHOD(Lex_SingleFloatTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleFloatTokenLexer();
+			Assert::AreEqual(5, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleFloatTokenLexer_HasCorrectKind) {
+			auto token = GetSingleFloatTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleFloatTokenLexer_HasCorrectStart) {
+			auto token = GetSingleFloatTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleFloatTokenLexer_HasCorrectValue) {
+			auto token = GetSingleFloatTokenLexer();
+			Assert::AreEqual(std::string("4.123"), token.Value);
+		}
+		
+
+		TEST_METHOD(Lex_SingleFloatWithExplicitlyPositiveExponentTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleFloatWithExplicitlyPositiveExponentTokenLexer();
+			Assert::AreEqual(6, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExplicitlyPositiveExponentTokenLexer_HasCorrectKind) {
+			auto token = GetSingleFloatWithExplicitlyPositiveExponentTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExplicitlyPositiveExponentTokenLexer_HasCorrectStart) {
+			auto token = GetSingleFloatWithExplicitlyPositiveExponentTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExplicitlyPositiveExponentTokenLexer_HasCorrectValue) {
+			auto token = GetSingleFloatWithExplicitlyPositiveExponentTokenLexer();
+			Assert::AreEqual(std::string("123e+4"), token.Value);
+		}
+
+		
+		TEST_METHOD(Lex_SingleFloatWithExponentCapitalLetterTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleFloatWithExponentCapitalLetterTokenLexer();
+			Assert::AreEqual(5, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExponentCapitalLetterTokenLexer_HasCorrectKind) {
+			auto token = GetSingleFloatWithExponentCapitalLetterTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExponentCapitalLetterTokenLexer_HasCorrectStart) {
+			auto token = GetSingleFloatWithExponentCapitalLetterTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExponentCapitalLetterTokenLexer_HasCorrectValue) {
+			auto token = GetSingleFloatWithExponentCapitalLetterTokenLexer();
+			Assert::AreEqual(std::string("123E4"), token.Value);
+		}
+		
+
+		TEST_METHOD(Lex_SingleFloatWithExponentTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleFloatWithExponentTokenLexer();
+			Assert::AreEqual(5, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExponentTokenLexer_HasCorrectKind) {
+			auto token = GetSingleFloatWithExponentTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExponentTokenLexer_HasCorrectStart) {
+			auto token = GetSingleFloatWithExponentTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithExponentTokenLexer_HasCorrectValue) {
+			auto token = GetSingleFloatWithExponentTokenLexer();
+			Assert::AreEqual(std::string("123e4"), token.Value);
+		}
+
+		
+		TEST_METHOD(Lex_SingleFloatWithNegativeExponentTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleFloatWithNegativeExponentTokenLexer();
+			Assert::AreEqual(6, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithNegativeExponentTokenLexer_HasCorrectKind) {
+			auto token = GetSingleFloatWithNegativeExponentTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithNegativeExponentTokenLexer_HasCorrectStart) {
+			auto token = GetSingleFloatWithNegativeExponentTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleFloatWithNegativeExponentTokenLexer_HasCorrectValue) {
+			auto token = GetSingleFloatWithNegativeExponentTokenLexer();
+			Assert::AreEqual(std::string("123e-4"), token.Value);
+		}
+
+		
+		TEST_METHOD(Lex_SingleNameSurroundedByCommasTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleNameSurroundedByCommasTokenLexer();
+			Assert::AreEqual(6, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleNameSurroundedByCommasTokenLexer_HasCorrectKind) {
+			auto token = GetSingleNameSurroundedByCommasTokenLexer();
+			Assert::IsTrue(TokenKind::NAME == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleNameSurroundedByCommasTokenLexer_HasCorrectStart) {
+			auto token = GetSingleNameSurroundedByCommasTokenLexer();
+			Assert::AreEqual(3, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleNameSurroundedByCommasTokenLexer_HasCorrectValue) {
+			auto token = GetSingleNameSurroundedByCommasTokenLexer();
+			Assert::AreEqual(std::string("foo"), token.Value);
+		}
+
+
+		TEST_METHOD(Lex_SingleNameWithBOMHeaderTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleNameWithBOMHeaderTokenLexer();
+			Assert::AreEqual(5, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleNameWithBOMHeaderTokenLexer_HasCorrectKind) {
+			auto token = GetSingleNameWithBOMHeaderTokenLexer();
+			Assert::IsTrue(TokenKind::NAME == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleNameWithBOMHeaderTokenLexer_HasCorrectStart) {
+			auto token = GetSingleNameWithBOMHeaderTokenLexer();
+			Assert::AreEqual(2, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleNameWithBOMHeaderTokenLexer_HasCorrectValue) {
+			auto token = GetSingleNameWithBOMHeaderTokenLexer();
+			Assert::AreEqual(std::string("foo"), token.Value);
+		}
+		
+
+		TEST_METHOD(Lex_SingleNegativeFloatTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleNegativeFloatTokenLexer();
+			Assert::AreEqual(6, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeFloatTokenLexer_HasCorrectKind) {
+			auto token = GetSingleNegativeFloatTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeFloatTokenLexer_HasCorrectStart) {
+			auto token = GetSingleNegativeFloatTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeFloatTokenLexer_HasCorrectValue) {
+			auto token = GetSingleNegativeFloatTokenLexer();
+			Assert::AreEqual(std::string("-0.123"), token.Value);
+		}
+		
+
+		TEST_METHOD(Lex_SingleNegativeFloatWithExponentTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleNegativeFloatWithExponentTokenLexer();
+			Assert::AreEqual(6, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeFloatWithExponentTokenLexer_HasCorrectKind) {
+			auto token = GetSingleNegativeFloatWithExponentTokenLexer();
+			Assert::IsTrue(TokenKind::FLOAT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeFloatWithExponentTokenLexer_HasCorrectStart) {
+			auto token = GetSingleNegativeFloatWithExponentTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeFloatWithExponentTokenLexer_HasCorrectValue) {
+			auto token = GetSingleNegativeFloatWithExponentTokenLexer();
+			Assert::AreEqual(std::string("-123e4"), token.Value);
+		}
+		
+
+		TEST_METHOD(Lex_SingleNegativeIntTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleNegativeIntTokenLexer();
+			Assert::AreEqual(2, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeIntTokenLexer_HasCorrectKind) {
+			auto token = GetSingleNegativeIntTokenLexer();
+			Assert::IsTrue(TokenKind::INT == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeIntTokenLexer_HasCorrectStart) {
+			auto token = GetSingleNegativeIntTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleNegativeIntTokenLexer_HasCorrectValue) {
+			auto token = GetSingleNegativeIntTokenLexer();
+			Assert::AreEqual(std::string("-3"), token.Value);
+		}
+		
+
+		TEST_METHOD(Lex_SingleStringWithSlashesTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleStringWithSlashesTokenLexer();
+			Assert::AreEqual(15, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleStringWithSlashesTokenLexer_HasCorrectKind) {
+			auto token = GetSingleStringWithSlashesTokenLexer();
+			Assert::IsTrue(TokenKind::STRING == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleStringWithSlashesTokenLexer_HasCorrectStart) {
+			auto token = GetSingleStringWithSlashesTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleStringWithSlashesTokenLexer_HasCorrectValue) {
+			auto token = GetSingleStringWithSlashesTokenLexer();
+			Assert::AreEqual(std::string("slashes \\ /"), token.Value);
+		}
+
+
+		TEST_METHOD(Lex_SingleStringWithUnicodeCharactersTokenLexer_HasCorrectEnd) {
+			auto token = GetSingleStringWithUnicodeCharactersTokenLexer();
+			Assert::AreEqual(34, token.End);
+		}
+
+		TEST_METHOD(Lex_SingleStringWithUnicodeCharactersTokenLexer_HasCorrectKind) {
+			auto token = GetSingleStringWithUnicodeCharactersTokenLexer();
+			Assert::IsTrue(TokenKind::STRING == token.Kind);
+		}
+
+		TEST_METHOD(Lex_SingleStringWithUnicodeCharactersTokenLexer_HasCorrectStart) {
+			auto token = GetSingleStringWithUnicodeCharactersTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_SingleStringWithUnicodeCharactersTokenLexer_HasCorrectValue) {
+			auto token = GetSingleStringWithUnicodeCharactersTokenLexer();
+			Assert::AreEqual(std::string("unicode \u1234\u5678\u90AB\uCDEF"), token.Value);
+		}
 
 	private:
 		static Token GetATPunctuationTokenLexer() {
@@ -450,6 +742,62 @@ namespace GraphQLParserTests {
 		static Token GetRightParenthesisPunctuationTokenLexer() {
 			return Lexer().Lex(Source(")"));
 		}
+		
+		static Token GetSimpleStringTokenLexer() {
+			return Lexer().Lex(Source("\"str\""));
+		}
 
+		static Token GetSingleDecimalIntTokenLexer() {
+			return Lexer().Lex(Source("0"));
+		}
+		
+		static Token GetSingleFloatTokenLexer() {
+			return Lexer().Lex(Source("4.123"));
+		}
+		
+		static Token GetSingleFloatWithExplicitlyPositiveExponentTokenLexer() {
+			return Lexer().Lex(Source("123e+4"));
+		}
+
+		static Token GetSingleFloatWithExponentCapitalLetterTokenLexer() {
+			return Lexer().Lex(Source("123E4"));
+		}
+		
+		static Token GetSingleFloatWithExponentTokenLexer() {
+			return Lexer().Lex(Source("123e4"));
+		}
+		
+		static Token GetSingleFloatWithNegativeExponentTokenLexer() {
+			return Lexer().Lex(Source("123e-4"));
+		}
+		
+		static Token GetSingleNameSurroundedByCommasTokenLexer() {
+			return Lexer().Lex(Source(",,,foo,,,"));
+		}
+		
+		static Token GetSingleNameWithBOMHeaderTokenLexer() {
+			return Lexer().Lex(Source("\uFEFF foo\\"));
+		}
+
+		static Token GetSingleNegativeFloatTokenLexer() {
+			return Lexer().Lex(Source("-0.123"));
+		}
+
+		static Token GetSingleNegativeFloatWithExponentTokenLexer() {
+			return Lexer().Lex(Source("-123e4"));
+		}
+		
+		static Token GetSingleNegativeIntTokenLexer() {
+			return Lexer().Lex(Source("-3"));
+		}
+		
+		static Token GetSingleStringWithSlashesTokenLexer() {
+			return Lexer().Lex(Source("\"slashes \\\\ \\/\""));
+		}
+		
+		
+		static Token GetSingleStringWithUnicodeCharactersTokenLexer() {
+			return Lexer().Lex(Source("\"unicode \\u1234\\u5678\\u90AB\\uCDEF\""));
+		}
 	};
 }
