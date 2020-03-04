@@ -5,6 +5,7 @@
 #include <GraphQLParser/AST/GraphQLComment.h>
 #include <GraphQLParser/AST/GraphQLEnumTypeDefinition.h>
 #include <GraphQLParser/AST/GraphQLInputObjectTypeDefinition.h>
+#include <GraphQLParser/Exceptions/GraphQLSyntaxErrorException.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace GraphQLParser;
@@ -71,14 +72,35 @@ scalar JSON
 			Assert::AreEqual(d1->Values[0].Comment != nullptr ? d1->Values[0].Comment->Text : "", std::string("a cat"));
 			Assert::AreEqual(d1->Values[1].Name.Value, std::string("Dog"));
 			Assert::AreEqual(d1->Values[2].Name.Value, std::string("Octopus"));
-			Assert::IsTrue(d1->Values[2].Comment == nullptr);
+			Assert::IsNull(d1->Values[2].Comment);
 			Assert::AreEqual(d1->Values[3].Name.Value, std::string("Bird"));
 
 			AST::GraphQLInputObjectTypeDefinition* d2 = static_cast<AST::GraphQLInputObjectTypeDefinition*>(document.Definitions[1]);
 			Assert::AreEqual(d2->Name.Value, std::string("Parameter"));
-			Assert::IsTrue(d2->Comment == nullptr);
+			Assert::IsNull(d2->Comment);
 			Assert::IsTrue(d2->Fields.size() == 1);
 			Assert::AreEqual(d2->Fields[0].Comment != nullptr ? d2->Fields[0].Comment->Text : "", std::string("any value"));
+		}
+
+		TEST_METHOD(Parse_Unicode_Char_At_EOF_Should_Throw) {
+			Assert::ExpectException<Exceptions::GraphQLSyntaxErrorException>([]() {
+				Parser parser = Parser(Lexer());
+
+				parser.Parse(Source("{\"\\ue }"));
+			});
+		}
+
+		TEST_METHOD(Parse_FieldInput) {
+			auto document = ParseGraphQLFieldSource();
+
+			Assert::IsTrue(document.Location.Start == 0);
+			Assert::IsTrue(document.Location.End == 9);
+			Assert::IsTrue(document.Definitions[0]->Kind == AST::ASTNodeKind::OperationDefinition);
+		}
+
+	private:
+		AST::GraphQLDocument ParseGraphQLFieldSource() {
+			return Parser(Lexer()).Parse(Source("{ field }"));
 		}
 	};
 }
