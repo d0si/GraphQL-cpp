@@ -31,7 +31,7 @@ namespace GraphQLParser {
 	private:
 		Lexer lexer;
 		Source source;
-		std::stack<AST::GraphQLComment> comments;
+		std::stack<AST::GraphQLComment*> comments;
 		Token current_token;
 
 	public:
@@ -39,7 +39,7 @@ namespace GraphQLParser {
 
 		AST::GraphQLDocument Parse();
 
-		AST::GraphQLComment GetComment();
+		AST::GraphQLComment* GetComment();
 
 	private:
 		void Advance();
@@ -71,7 +71,7 @@ namespace GraphQLParser {
 		AST::GraphQLValue ParseValueLiteral(bool is_constant);
 
 		AST::GraphQLName ParseName();
-		AST::GraphQLComment ParseComment();
+		AST::GraphQLComment* ParseComment();
 		std::vector<AST::ASTNode*> ParseDefinitionsIfNotEOF();
 		AST::ASTNode* ParseDefinition();
 		AST::ASTNode* ParseOperationDefinition();
@@ -88,7 +88,7 @@ namespace GraphQLParser {
 		AST::GraphQLNamedType ParseNamedType();
 
 		AST::ASTNode ParseFieldSelection();
-		AST::GraphQLFieldSelection CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, AST::GraphQLComment comment);
+		AST::GraphQLFieldSelection CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, AST::GraphQLComment* comment);
 
 		std::vector<AST::GraphQLVariableDefinition> ParseVariableDefinitions();
 		AST::GraphQLVariableDefinition ParseVariableDefinition();

@@ -17,7 +17,7 @@ namespace GraphQLParser {
 
 		ASTNode::~ASTNode() {
 			if (Comment != nullptr) {
-				delete Comment;
+				// delete Comment;
 			}
 		}
 
