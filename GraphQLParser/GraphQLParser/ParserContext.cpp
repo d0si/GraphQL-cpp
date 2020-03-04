@@ -53,14 +53,17 @@ namespace GraphQLParser {
 	}
 
 	AST::ASTNode* ParserContext::CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name) {
-		AST::GraphQLComment comment = GetComment();
+		auto comment = GetComment();
+		auto definitions = ParseVariableDefinitions();
+		auto directives = ParseDirectives();
+		auto selection_set = ParseSelectionSet();
 
 		AST::GraphQLOperationDefinition* definition = new AST::GraphQLOperationDefinition(
 			operation,
 			name,
-			ParseVariableDefinitions(),
-			ParseDirectives(),
-			ParseSelectionSet()
+			definitions,
+			directives,
+			selection_set
 		);
 		definition->set_comment(comment);
 		definition->Location = GetLocation(start);
@@ -249,8 +252,10 @@ namespace GraphQLParser {
 	AST::GraphQLArgument ParserContext::ParseArgument() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
+		auto name = ParseName();
+		auto value_literal = ExpectColonAndParseValueLiteral(false);
 
-		AST::GraphQLArgument argument(ParseName(), ExpectColonAndParseValueLiteral(false));
+		AST::GraphQLArgument argument(name, value_literal);
 		argument.set_comment(comment);
 		argument.Location = GetLocation(start);
 
@@ -374,7 +379,10 @@ namespace GraphQLParser {
 			return CreateOperationDefinition(start);
 		}
 
-		return CreateOperationDefinition(start, ParseOperationType(), GetName());
+		auto operation_type = ParseOperationType();
+		auto name = GetName();
+
+		return CreateOperationDefinition(start, operation_type, name);
 	}
 
 	AST::OperationType ParserContext::ParseOperationType() {
@@ -415,17 +423,24 @@ namespace GraphQLParser {
 	}
 
 	AST::ASTNode ParserContext::CreateGraphQLFragmentSpread(int start) {
-		AST::GraphQLFragmentSpread fragment(ParseFragmentName(), ParseDirectives());
+		auto name = ParseFragmentName();
+		auto directives = ParseDirectives();
+
+		AST::GraphQLFragmentSpread fragment(name, directives);
 		fragment.Location = GetLocation(start);
 
 		return fragment;
 	}
 
 	AST::ASTNode ParserContext::CreateInlineFragment(int start) {
+		auto type_condition = GetTypeCondition();
+		auto directives = ParseDirectives();
+		auto selection_set = ParseSelectionSet();
+
 		AST::GraphQLInlineFragment fragment(
-			GetTypeCondition(),
-			ParseDirectives(),
-			ParseSelectionSet()
+			type_condition,
+			directives,
+			selection_set
 		);
 		fragment.Location = GetLocation(start);
 
@@ -453,8 +468,9 @@ namespace GraphQLParser {
 
 	AST::GraphQLNamedType ParserContext::ParseNamedType() {
 		int start = current_token.Start;
+		auto name = ParseName();
 
-		AST::GraphQLNamedType type(ParseName());
+		AST::GraphQLNamedType type(name);
 		type.Location = GetLocation(start);
 
 		return type;
@@ -479,12 +495,16 @@ namespace GraphQLParser {
 	}
 
 	AST::GraphQLFieldSelection ParserContext::CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, AST::GraphQLComment comment) {
+		auto arguments = ParseArguments();
+		auto directives = ParseDirectives();
+		auto selection_set = Peek(TokenKind::BRACE_L) ? ParseSelectionSet() : AST::GraphQLSelectionSet();
+
 		AST::GraphQLFieldSelection field_selection(
 			alias,
 			name,
-			ParseArguments(),
-			ParseDirectives(),
-			Peek(TokenKind::BRACE_L) ? ParseSelectionSet() : AST::GraphQLSelectionSet()
+			arguments,
+			directives,
+			selection_set
 		);
 
 		field_selection.set_comment(comment);
@@ -516,11 +536,14 @@ namespace GraphQLParser {
 
 	AST::GraphQLVariableDefinition ParserContext::ParseVariableDefinition() {
 		int start = current_token.Start;
+		auto variable = ParseVariable();
+		auto type = AdvanceThroughColonAndParseType();
+		auto value_literal = SkipEqualsAndParseValueLiteral();
 
 		AST::GraphQLVariableDefinition definition(
-			ParseVariable(),
-			AdvanceThroughColonAndParseType(),
-			SkipEqualsAndParseValueLiteral()
+			variable,
+			type,
+			value_literal
 		);
 		definition.Location = GetLocation(start);
 
@@ -540,8 +563,10 @@ namespace GraphQLParser {
 	AST::GraphQLDirective ParserContext::ParseDirective() {
 		int start = current_token.Start;
 		Expect(TokenKind::AT);
+		auto name = ParseName();
+		auto arguments = ParseArguments();
 
-		AST::GraphQLDirective directive(ParseName(), ParseArguments());
+		AST::GraphQLDirective directive(name, arguments);
 		directive.Location = GetLocation(start);
 
 		return directive;
@@ -632,8 +657,9 @@ namespace GraphQLParser {
 	AST::GraphQLVariable ParserContext::ParseVariable() {
 		int start = current_token.Start;
 		Expect(TokenKind::DOLLAR);
+		auto name = GetName();
 
-		AST::GraphQLVariable variable(GetName());
+		AST::GraphQLVariable variable(name);
 		variable.Location = GetLocation(start);
 
 		return variable;
@@ -661,8 +687,10 @@ namespace GraphQLParser {
 	AST::GraphQLObjectField ParserContext::ParseObjectField(bool is_constant) {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
+		auto name = ParseName();
+		auto value_literal = ExpectColonAndParseValueLiteral(is_constant);
 
-		AST::GraphQLObjectField field(ParseName(), ExpectColonAndParseValueLiteral(is_constant));
+		AST::GraphQLObjectField field(name, value_literal);
 		field.set_comment(comment);
 		field.Location = GetLocation(start);
 
@@ -777,11 +805,16 @@ namespace GraphQLParser {
 
 		ExpectKeyword("fragment");
 
+		auto name = ParseFragmentName();
+		auto named_type = ExpectOnKeywordAndParseNamedType();
+		auto directives = ParseDirectives();
+		auto selection_set = ParseSelectionSet();
+
 		AST::GraphQLFragmentDefinition* definition = new AST::GraphQLFragmentDefinition(
-			ParseFragmentName(),
-			ExpectOnKeywordAndParseNamedType(),
-			ParseDirectives(),
-			ParseSelectionSet()
+			name,
+			named_type,
+			directives,
+			selection_set
 		);
 		definition->set_comment(comment);
 		definition->Location = GetLocation(start);
@@ -846,14 +879,18 @@ namespace GraphQLParser {
 
 		int start = current_token.Start;
 		ExpectKeyword("type");
+		auto name = ParseName();
+		auto implements_interfaces = ParseImplementsInterfaces();
+		auto directives = ParseDirectives();
+		auto fields = Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
+			return context->ParseFieldDefinition();
+			}, TokenKind::BRACE_R);
 
 		AST::GraphQLObjectTypeDefinition* definition = new AST::GraphQLObjectTypeDefinition(
-			ParseName(),
-			ParseImplementsInterfaces(),
-			ParseDirectives(),
-			Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
-				return context->ParseFieldDefinition();
-				}, TokenKind::BRACE_R)
+			name,
+			implements_interfaces,
+			directives,
+			fields
 		);
 		definition->set_comment(comment);
 		definition->Location = GetLocation(start);
@@ -881,8 +918,15 @@ namespace GraphQLParser {
 		AST::GraphQLName name = ParseName();
 		std::vector<AST::GraphQLInputValueDefinition> args = ParseArgumentDefs();
 		Expect(TokenKind::COLON);
+		auto type = ParseType();
+		auto directives = ParseDirectives();
 
-		AST::GraphQLFieldDefinition definition(name, args, ParseType(), ParseDirectives());
+		AST::GraphQLFieldDefinition definition(
+			name,
+			args,
+			type,
+			directives
+		);
 		definition.set_comment(comment);
 		definition.Location = GetLocation(start);
 
@@ -904,8 +948,16 @@ namespace GraphQLParser {
 		int start = current_token.Start;
 		AST::GraphQLName name = ParseName();
 		Expect(TokenKind::COLON);
+		auto type = ParseType();
+		auto default_constant_value = GetDefaultConstantValue();
+		auto directives = ParseDirectives();
 
-		AST::GraphQLInputValueDefinition definition(name, ParseType(), GetDefaultConstantValue(), ParseDirectives());
+		AST::GraphQLInputValueDefinition definition(
+			name,
+			type,
+			default_constant_value,
+			directives
+		);
 		definition.set_comment(comment);
 		definition.Location = GetLocation(start);
 
@@ -926,13 +978,16 @@ namespace GraphQLParser {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("interface");
+		auto name = ParseName();
+		auto directives = ParseDirectives();
+		auto fields = Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
+			return context->ParseFieldDefinition();
+			}, TokenKind::BRACE_R);
 
 		AST::GraphQLInterfaceTypeDefinition* definition = new AST::GraphQLInterfaceTypeDefinition(
-			ParseName(),
-			ParseDirectives(),
-			Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLFieldDefinition {
-				return context->ParseFieldDefinition();
-				}, TokenKind::BRACE_R)
+			name,
+			directives,
+			fields
 		);
 		definition->set_comment(comment);
 		definition->Location = GetLocation(start);
@@ -973,13 +1028,16 @@ namespace GraphQLParser {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("enum");
+		auto name = ParseName();
+		auto directives = ParseDirectives();
+		auto values = ManyEnumValueDefinition(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLEnumValueDefinition {
+			return context->ParseEnumValueDefinition();
+				}, TokenKind::BRACE_R);
 
 		AST::GraphQLEnumTypeDefinition* definition = new AST::GraphQLEnumTypeDefinition(
-			ParseName(),
-			ParseDirectives(),
-			ManyEnumValueDefinition(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLEnumValueDefinition {
-				return context->ParseEnumValueDefinition();
-				}, TokenKind::BRACE_R)
+			name,
+			directives,
+			values
 		);
 		definition->set_comment(comment);
 		definition->Location = GetLocation(start);
@@ -990,8 +1048,10 @@ namespace GraphQLParser {
 	AST::GraphQLEnumValueDefinition ParserContext::ParseEnumValueDefinition() {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
+		auto name = ParseName();
+		auto directives = ParseDirectives();
 
-		AST::GraphQLEnumValueDefinition definition(ParseName(), ParseDirectives());
+		AST::GraphQLEnumValueDefinition definition(name, directives);
 		definition.set_comment(comment);
 		definition.Location = GetLocation(start);
 
@@ -1002,13 +1062,16 @@ namespace GraphQLParser {
 		AST::GraphQLComment comment = GetComment();
 		int start = current_token.Start;
 		ExpectKeyword("input");
+		auto name = ParseName();
+		auto directives = ParseDirectives();
+		auto fields = Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLInputValueDefinition {
+			return context->ParseInputValueDef();
+			}, TokenKind::BRACE_R);
 
 		AST::GraphQLInputObjectTypeDefinition* definition = new AST::GraphQLInputObjectTypeDefinition(
-			ParseName(),
-			ParseDirectives(),
-			Any(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLInputValueDefinition {
-				return context->ParseInputValueDef();
-				}, TokenKind::BRACE_R)
+			name,
+			directives,
+			fields
 		);
 		definition->set_comment(comment);
 		definition->Location = GetLocation(start);
