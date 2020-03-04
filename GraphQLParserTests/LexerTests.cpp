@@ -268,8 +268,117 @@ namespace GraphQLParserTests {
 		}
 
 
+		// Unsupported usage case
+		/*TEST_METHOD(Lex_NullInput_ReturnsEOF) {
+			auto token = Lexer().Lex(Source(nullptr));
+
+			Assert::AreEqual(TokenKind::EOF_, token.Kind);
+		}*/
 
 
+		TEST_METHOD(Lex_PipePunctuation_HasCorrectEnd) {
+			auto token = GetPipePunctuationTokenLexer();
+			Assert::AreEqual(1, token.End);
+		}
+
+		TEST_METHOD(Lex_PipePunctuation_HasCorrectKind) {
+			auto token = GetPipePunctuationTokenLexer();
+			Assert::IsTrue(TokenKind::PIPE == token.Kind);
+		}
+
+		TEST_METHOD(Lex_PipePunctuation_HasCorrectStart) {
+			auto token = GetPipePunctuationTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_PipePunctuation_HasCorrectValue) {
+			auto token = GetPipePunctuationTokenLexer();
+			Assert::AreEqual((size_t)0, token.Value.length());
+		}
+
+
+		TEST_METHOD(Lex_QuoteString_HasCorrectEnd) {
+			auto token = GetQuoteStringTokenLexer();
+			Assert::AreEqual(10, token.End);
+		}
+
+		TEST_METHOD(Lex_QuoteString_HasCorrectKind) {
+			auto token = GetQuoteStringTokenLexer();
+			Assert::IsTrue(TokenKind::STRING == token.Kind);
+		}
+
+		TEST_METHOD(Lex_QuoteString_HasCorrectStart) {
+			auto token = GetQuoteStringTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_QuoteString_HasCorrectValue) {
+			auto token = GetQuoteStringTokenLexer();
+			Assert::AreEqual(std::string("quote \""), token.Value);
+		}
+
+
+		TEST_METHOD(Lex_RightBracePunctuation_HasCorrectEnd) {
+			auto token = GetRightBracePunctuationTokenLexer();
+			Assert::AreEqual(1, token.End);
+		}
+
+		TEST_METHOD(Lex_RightBracePunctuation_HasCorrectKind) {
+			auto token = GetRightBracePunctuationTokenLexer();
+			Assert::IsTrue(TokenKind::BRACE_R == token.Kind);
+		}
+
+		TEST_METHOD(Lex_RightBracePunctuation_HasCorrectStart) {
+			auto token = GetRightBracePunctuationTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_RightBracePunctuation_HasCorrectValue) {
+			auto token = GetRightBracePunctuationTokenLexer();
+			Assert::AreEqual((size_t)0, token.Value.length());
+		}
+
+
+		TEST_METHOD(Lex_RightBracketPunctuation_HasCorrectEnd) {
+			auto token = GetRightBracketPunctuationTokenLexer();
+			Assert::AreEqual(1, token.End);
+		}
+
+		TEST_METHOD(Lex_RightBracketPunctuation_HasCorrectKind) {
+			auto token = GetRightBracketPunctuationTokenLexer();
+			Assert::IsTrue(TokenKind::BRACKET_R == token.Kind);
+		}
+
+		TEST_METHOD(Lex_RightBracketPunctuation_HasCorrectStart) {
+			auto token = GetRightBracketPunctuationTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_RightBracketPunctuation_HasCorrectValue) {
+			auto token = GetRightBracketPunctuationTokenLexer();
+			Assert::AreEqual((size_t)0, token.Value.length());
+		}
+
+
+		TEST_METHOD(Lex_RightParenthesisPunctuation_HasCorrectEnd) {
+			auto token = GetRightParenthesisPunctuationTokenLexer();
+			Assert::AreEqual(1, token.End);
+		}
+
+		TEST_METHOD(Lex_RightParenthesisPunctuation_HasCorrectKind) {
+			auto token = GetRightParenthesisPunctuationTokenLexer();
+			Assert::IsTrue(TokenKind::PAREN_R == token.Kind);
+		}
+
+		TEST_METHOD(Lex_RightParenthesisPunctuation_HasCorrectStart) {
+			auto token = GetRightParenthesisPunctuationTokenLexer();
+			Assert::AreEqual(0, token.Start);
+		}
+
+		TEST_METHOD(Lex_RightParenthesisPunctuation_HasCorrectValue) {
+			auto token = GetRightParenthesisPunctuationTokenLexer();
+			Assert::AreEqual((size_t)0, token.Value.length());
+		}
 
 
 
@@ -321,5 +430,26 @@ namespace GraphQLParserTests {
 		static Token GetSingleNameTokenLexerSurroundedWithWhitespaces() {
 			return Lexer().Lex(Source("\n        foo\n\n    "));
 		}
+
+		static Token GetPipePunctuationTokenLexer() {
+			return Lexer().Lex(Source("|"));
+		}
+
+		static Token GetQuoteStringTokenLexer() {
+			return Lexer().Lex(Source("\"quote \\\"\""));
+		}
+
+		static Token GetRightBracePunctuationTokenLexer() {
+			return Lexer().Lex(Source("}"));
+		}
+
+		static Token GetRightBracketPunctuationTokenLexer() {
+			return Lexer().Lex(Source("]"));
+		}
+
+		static Token GetRightParenthesisPunctuationTokenLexer() {
+			return Lexer().Lex(Source(")"));
+		}
+
 	};
 }
