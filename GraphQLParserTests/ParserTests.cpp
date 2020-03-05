@@ -7,6 +7,7 @@
 #include <GraphQLParser/AST/GraphQLInputObjectTypeDefinition.h>
 #include <GraphQLParser/Exceptions/GraphQLSyntaxErrorException.h>
 #include <GraphQLParser/AST/GraphQLObjectTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLSchemaDefinition.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace GraphQLParser;
@@ -154,8 +155,24 @@ scalar JSON
 			for (auto def : document.Definitions) {
 				if (def->Kind == AST::ASTNodeKind::ObjectTypeDefinition) {
 					auto type_def = static_cast<AST::GraphQLObjectTypeDefinition*>(def);
+					auto field_def = type_def->Fields[2];
 
 					Assert::AreEqual(std::string("Foo"), type_def->Name.Value);
+					Assert::AreEqual(std::string("three"), field_def.Name.Value);
+					Assert::AreEqual(std::string(" multiline comments\n with very importand description #\n # and symbol # and ##"), field_def.Comment->Text);
+
+					break;
+				}
+			}
+
+			for (auto def : document.Definitions) {
+				if (def->Kind == AST::ASTNodeKind::SchemaDefinition) {
+					auto definition = static_cast<AST::GraphQLSchemaDefinition*>(def);
+					const std::string compare = " Copyright (c) 2015, Facebook, Inc.";
+
+					Assert::IsNotNull(definition->Comment);
+					Assert::IsTrue(definition->Comment->Text.length() > 0);
+					Assert::AreEqual(definition->Comment->Text.substr(0, compare.length()), compare);
 
 					break;
 				}
