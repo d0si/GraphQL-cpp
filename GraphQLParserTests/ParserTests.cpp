@@ -248,7 +248,7 @@ subscription StoryLikeSubscription($input: StoryLikeSubscribeInput) {
 }
 
 fragment frag on Friend {
-  foo(size: $size, bar: $b, obj: {key: ""value""})
+  foo(size: $size, bar: $b, obj: {key: "value"})
 }
 
 {
@@ -278,21 +278,21 @@ type Foo implements Bar
   # with very importand description #
   # # and symbol # and ##
   three(argument: InputType, other: String): Int
-  four(argument: String = ""string""): String
-  five(argument: [String] = [""string"", ""string""]): String
-  six(argument: InputType = { key: ""value""}): Type
+  four(argument: String = "string"): String
+  five(argument: [String] = ["string", "string"]): String
+  six(argument: InputType = { key: "value"}): Type
 }
 
-type AnnotatedObject @onObject(arg: ""value"")
+type AnnotatedObject @onObject(arg: "value")
 {
     # a comment
-    annotatedField(arg: Type = ""default"" @onArg): Type @onField
+    annotatedField(arg: Type = "default" @onArg): Type @onField
 }
 
 interface Bar
 {
     one: Type
-    four(argument: String = ""string""): String
+    four(argument: String = "string"): String
 }
 
 interface AnnotatedInterface @onInterface {
