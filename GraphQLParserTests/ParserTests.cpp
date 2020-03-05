@@ -6,20 +6,17 @@
 #include <GraphQLParser/AST/GraphQLEnumTypeDefinition.h>
 #include <GraphQLParser/AST/GraphQLInputObjectTypeDefinition.h>
 #include <GraphQLParser/Exceptions/GraphQLSyntaxErrorException.h>
+#include <GraphQLParser/AST/GraphQLObjectTypeDefinition.h>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 using namespace GraphQLParser;
 
-namespace GraphQLParserTests
-{
-	TEST_CLASS(ParserTests)
-	{
+namespace GraphQLParserTests {
+	TEST_CLASS(ParserTests) {
 	public:
 
-		TEST_METHOD(Comments_on_SelectionSet_Should_Read_Correctly)
-		{
-			Parser parser = Parser(Lexer());
-			AST::GraphQLDocument document = parser.Parse(Source(R"(
+		TEST_METHOD(Comments_on_SelectionSet_Should_Read_Correctly) {
+			AST::GraphQLDocument document = Parser().Parse(Source(R"(
 query {
 	# a comment below query
 	field1
@@ -41,8 +38,7 @@ query {
 		}
 
 		TEST_METHOD(Comments_On_Enums_Should_Read_Correctly) {
-			Parser parser = Parser(Lexer());
-			AST::GraphQLDocument document = parser.Parse(Source(R"(
+			AST::GraphQLDocument document = Parser().Parse(Source(R"(
 # different animals
 enum Animal {
     #a cat
@@ -84,9 +80,7 @@ scalar JSON
 
 		TEST_METHOD(Parse_Unicode_Char_At_EOF_Should_Throw) {
 			Assert::ExpectException<Exceptions::GraphQLSyntaxErrorException>([]() {
-				Parser parser = Parser(Lexer());
-
-				parser.Parse(Source("{\"\\ue }"));
+				Parser().Parse(Source("{\"\\ue }"));
 			});
 		}
 
@@ -148,9 +142,39 @@ scalar JSON
 			Assert::IsTrue(document.Kind == AST::ASTNodeKind::Document);
 		}
 
+		TEST_METHOD(Parse_FieldWithOperationTypeAndNameInput_SelectionSetContainsSingleFieldWithOperationTypeAndNameSelection) {
+			auto document = ParseGraphQLFieldWithOperationTypeAndNameSource();
+
+			Assert::IsTrue(GetSingleSelection(document).Kind == AST::ASTNodeKind::Field);
+		}
+
+		TEST_METHOD(Parse_KitchenSink_DoesNotThrowError) {
+			auto document = Parser().Parse(Source(LoadKitchenSink()));
+			
+			for (auto def : document.Definitions) {
+				if (def->Kind == AST::ASTNodeKind::ObjectTypeDefinition) {
+					auto type_def = static_cast<AST::GraphQLObjectTypeDefinition*>(def);
+
+					Assert::AreEqual(std::string("Foo"), type_def->Name.Value);
+
+					break;
+				}
+			}
+		}
+
+		TEST_METHOD(Parse_NullInput_EmptyDocument) {
+			auto document = Parser().Parse(Source(""));
+
+			Assert::IsTrue(document.Definitions.size() == 0);
+		}
+
+		TEST_METHOD(Parse_VariableInlineValues_DoesNotThrowError) {
+			Parser().Parse(Source("{ field(complex: { a: { b: [ $var ] } }) }"));
+		}
+
 	private:
 		AST::GraphQLDocument ParseGraphQLFieldSource() {
-			return Parser(Lexer()).Parse(Source("{ field }"));
+			return Parser().Parse(Source("{ field }"));
 		}
 
 		AST::GraphQLOperationDefinition* GetSingleOperationDefinition(AST::GraphQLDocument document) {
@@ -162,7 +186,162 @@ scalar JSON
 		}
 
 		AST::GraphQLDocument ParseGraphQLFieldWithOperationTypeAndNameSource() {
-			return Parser(Lexer()).Parse(Source("mutation Foo { field }"));
+			return Parser().Parse(Source("mutation Foo { field }"));
+		}
+
+		const std::string LoadKitchenSink() {
+			return R"(# Copyright (c) 2015, Facebook, Inc.
+# All rights reserved.
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree. An additional grant
+# of patent rights can be found in the PATENTS file in the same directory.
+
+query queryName($foo: ComplexType, $site: Site = MOBILE) {
+  whoever123is: node(id: [123, 456]) {
+    id ,
+    ... on User @defer {
+      field2 {
+        id ,
+        alias: field1(first:10, after:$foo,) @include(if: $foo) {
+          id,
+          ...frag
+        }
+      }
+    }
+    ... @skip(unless: $foo) {
+      id
+    }
+    ... {
+      id
+    }
+  }
+}
+
+mutation updateStory {
+  like(story: {id: 123, EndDate: null}) {
+    story {
+      id
+    }
+  }
+}
+
+mutation likeStory {
+  like(story: 123) @defer {
+    story {
+      id
+    }
+  }
+}
+
+subscription StoryLikeSubscription($input: StoryLikeSubscribeInput) {
+  storyLikeSubscribe(input: $input) {
+    story {
+      likers {
+        count
+      }
+      likeSentence {
+        text
+      }
+    }
+  }
+}
+
+fragment frag on Friend {
+  foo(size: $size, bar: $b, obj: {key: ""value""})
+}
+
+{
+  unnamed(truthy: true, falsey: false),
+  query
+    }
+
+# Copyright (c) 2015, Facebook, Inc.
+# All rights reserved.
+#
+# This source code is licensed under the BSD-style license found in the
+# LICENSE file in the root directory of this source tree. An additional grant
+# of patent rights can be found in the PATENTS file in the same directory.
+
+schema {
+  query: QueryType
+  mutation: MutationType
+}
+
+type Foo implements Bar
+{
+  # comment 1
+  one: Type
+  # comment 2
+  two(argument: InputType!): Type
+  # multiline comments
+  # with very importand description #
+  # # and symbol # and ##
+  three(argument: InputType, other: String): Int
+  four(argument: String = ""string""): String
+  five(argument: [String] = [""string"", ""string""]): String
+  six(argument: InputType = { key: ""value""}): Type
+}
+
+type AnnotatedObject @onObject(arg: ""value"")
+{
+    # a comment
+    annotatedField(arg: Type = ""default"" @onArg): Type @onField
+}
+
+interface Bar
+{
+    one: Type
+    four(argument: String = ""string""): String
+}
+
+interface AnnotatedInterface @onInterface {
+  annotatedField(arg: Type @onArg): Type @onField
+}
+
+union Feed = Story | Article | Advert
+
+union AnnotatedUnion @onUnion = A | B
+
+scalar CustomScalar
+
+scalar AnnotatedScalar @onScalar
+
+enum Site
+{
+    DESKTOP
+  MOBILE
+}
+
+enum AnnotatedEnum @onEnum {
+  ANNOTATED_VALUE @onEnumValue
+  OTHER_VALUE
+}
+
+input InputType
+{
+    key: String!
+  answer: Int = 42
+}
+
+input AnnotatedInput @onInputObjectType {
+  annotatedField: Type @onField
+}
+
+extend type Foo {
+  seven(argument: [String]): Type
+}
+
+extend type Foo @onType { }
+
+type NoFields { }
+
+directive @skip(if: Boolean!) on FIELD | FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+directive @include(if: Boolean!)
+  on FIELD
+   | FRAGMENT_SPREAD
+   | INLINE_FRAGMENT)";
 		}
 	};
 }
