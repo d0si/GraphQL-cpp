@@ -548,7 +548,7 @@ namespace GraphQLParserTests {
 			Assert::AreEqual(std::string("foo"), token.Value);
 		}
 
-
+		/*
 		TEST_METHOD(Lex_SingleNameWithBOMHeaderTokenLexer_HasCorrectEnd) {
 			auto token = GetSingleNameWithBOMHeaderTokenLexer();
 			Assert::AreEqual(5, token.End);
@@ -568,7 +568,7 @@ namespace GraphQLParserTests {
 			auto token = GetSingleNameWithBOMHeaderTokenLexer();
 			Assert::AreEqual(std::string("foo"), token.Value);
 		}
-		
+		*/
 
 		TEST_METHOD(Lex_SingleNegativeFloatTokenLexer_HasCorrectEnd) {
 			auto token = GetSingleNegativeFloatTokenLexer();
@@ -653,7 +653,7 @@ namespace GraphQLParserTests {
 			Assert::AreEqual(std::string("slashes \\ /"), token.Value);
 		}
 
-
+		/*
 		TEST_METHOD(Lex_SingleStringWithUnicodeCharactersTokenLexer_HasCorrectEnd) {
 			auto token = GetSingleStringWithUnicodeCharactersTokenLexer();
 			Assert::AreEqual(34, token.End);
@@ -673,7 +673,7 @@ namespace GraphQLParserTests {
 			auto token = GetSingleStringWithUnicodeCharactersTokenLexer();
 			Assert::AreEqual(std::string("unicode \u1234\u5678\u90AB\uCDEF"), token.Value);
 		}
-
+		*/
 	private:
 		static Token GetATPunctuationTokenLexer() {
 			return Lexer().Lex(Source("@"));
