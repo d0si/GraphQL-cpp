@@ -104,6 +104,50 @@ scalar JSON
 			Assert::IsTrue(GetSingleOperationDefinition(document)->Name.Value.length() == 0);
 		}
 
+		TEST_METHOD(Parse_FieldInput_OperationIsQuery) {
+			auto document = ParseGraphQLFieldSource();
+
+			Assert::IsTrue(GetSingleOperationDefinition(document)->Operation == AST::OperationType::Query);
+		}
+
+		TEST_METHOD(Parse_FieldInput_ReturnsDocumentNode) {
+			auto document = ParseGraphQLFieldSource();
+
+			Assert::IsTrue(document.Kind == AST::ASTNodeKind::Document);
+		}
+
+		TEST_METHOD(Parse_FieldInput_SelectionSetContainsSingleFieldSelection) {
+			auto document = ParseGraphQLFieldSource();
+
+			Assert::IsTrue(GetSingleSelection(document).Kind == AST::ASTNodeKind::Field);
+		}
+
+		TEST_METHOD(Parse_FieldWithOperationTypeAndNameInput_HasCorrectEndLocationAttribute) {
+			auto document = ParseGraphQLFieldWithOperationTypeAndNameSource();
+
+			Assert::IsTrue(document.Location.End == 22);
+			Assert::IsTrue(document.Location.Start == 0);
+			Assert::IsTrue(document.Definitions[0]->Kind == AST::ASTNodeKind::OperationDefinition);
+		}
+
+		TEST_METHOD(Parse_FieldWithOperationTypeAndNameInput_NameIsSet) {
+			auto document = ParseGraphQLFieldWithOperationTypeAndNameSource();
+
+			Assert::AreEqual(std::string("Foo"), GetSingleOperationDefinition(document)->Name.Value);
+		}
+
+		TEST_METHOD(Parse_FieldWithOperationTypeAndNameInput_OperationIsQuery) {
+			auto document = ParseGraphQLFieldWithOperationTypeAndNameSource();
+
+			Assert::IsTrue(GetSingleOperationDefinition(document)->Operation == AST::OperationType::Mutation);
+		}
+
+		TEST_METHOD(Parse_FieldWithOperationTypeAndNameInput_ReturnsDocumentNode) {
+			auto document = ParseGraphQLFieldWithOperationTypeAndNameSource();
+
+			Assert::IsTrue(document.Kind == AST::ASTNodeKind::Document);
+		}
+
 	private:
 		AST::GraphQLDocument ParseGraphQLFieldSource() {
 			return Parser(Lexer()).Parse(Source("{ field }"));
@@ -111,6 +155,14 @@ scalar JSON
 
 		AST::GraphQLOperationDefinition* GetSingleOperationDefinition(AST::GraphQLDocument document) {
 			return static_cast<AST::GraphQLOperationDefinition*>(document.Definitions[0]);
+		}
+
+		AST::ASTNode GetSingleSelection(AST::GraphQLDocument document) {
+			return GetSingleOperationDefinition(document)->SelectionSet.Selections[0];
+		}
+
+		AST::GraphQLDocument ParseGraphQLFieldWithOperationTypeAndNameSource() {
+			return Parser(Lexer()).Parse(Source("mutation Foo { field }"));
 		}
 	};
 }
