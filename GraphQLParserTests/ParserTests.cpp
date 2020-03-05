@@ -98,9 +98,19 @@ scalar JSON
 			Assert::IsTrue(document.Definitions[0]->Kind == AST::ASTNodeKind::OperationDefinition);
 		}
 
+		TEST_METHOD(Parse_FieldInput_NameIsNull) {
+			auto document = ParseGraphQLFieldSource();
+
+			Assert::IsTrue(GetSingleOperationDefinition(document)->Name.Value.length() == 0);
+		}
+
 	private:
 		AST::GraphQLDocument ParseGraphQLFieldSource() {
 			return Parser(Lexer()).Parse(Source("{ field }"));
+		}
+
+		AST::GraphQLOperationDefinition* GetSingleOperationDefinition(AST::GraphQLDocument document) {
+			return static_cast<AST::GraphQLOperationDefinition*>(document.Definitions[0]);
 		}
 	};
 }
