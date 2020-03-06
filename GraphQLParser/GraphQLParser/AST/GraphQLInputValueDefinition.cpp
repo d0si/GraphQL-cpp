@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLInputValueDefinition::GraphQLInputValueDefinition(GraphQLName name, GraphQLType type, GraphQLValue default_value, std::vector<GraphQLDirective> directives)
+		GraphQLInputValueDefinition::GraphQLInputValueDefinition(GraphQLName name, GraphQLType type, GraphQLValue* default_value, std::vector<GraphQLDirective> directives)
 			: GraphQLTypeDefinition(ASTNodeKind::InputValueDefinition, name), Type(type), DefaultValue(default_value), Directives(directives) {
 
 		}

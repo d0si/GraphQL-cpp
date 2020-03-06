@@ -10,11 +10,11 @@ namespace GraphQLParser {
 		class GraphQLObjectField: public ASTNode {
 		public:
 			GraphQLObjectField();
-			GraphQLObjectField(GraphQLName name, GraphQLValue value);
+			GraphQLObjectField(GraphQLName name, GraphQLValue* value);
 
 			GraphQLName Name;
 
-			GraphQLValue Value;
+			GraphQLValue* Value;
 		};
 	}
 }

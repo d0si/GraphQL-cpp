@@ -9,11 +9,11 @@ namespace GraphQLParser {
 		class GraphQLArgument : public ASTNode {
 		public:
 			GraphQLArgument();
-			GraphQLArgument(GraphQLName name, GraphQLValue value);
+			GraphQLArgument(GraphQLName name, GraphQLValue* value);
 
 			GraphQLName Name;
 
-			GraphQLValue Value;
+			GraphQLValue* Value;
 		};
 	}
 }

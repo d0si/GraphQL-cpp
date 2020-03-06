@@ -61,14 +61,14 @@ namespace GraphQLParser {
 		std::vector<AST::GraphQLInputValueDefinition> ManyInputValueDefinition(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close);
 		std::vector<AST::GraphQLEnumValueDefinition> ManyEnumValueDefinition(TokenKind open, AST::GraphQLEnumValueDefinition(*next)(ParserContext*), TokenKind close);
 
-		std::vector<AST::GraphQLValue> Any(TokenKind open, AST::GraphQLValue(*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close);
+		std::vector<AST::GraphQLValue*> Any(TokenKind open, AST::GraphQLValue* (*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close);
 		std::vector<AST::GraphQLFieldDefinition> Any(TokenKind open, AST::GraphQLFieldDefinition(*next)(ParserContext*), TokenKind close);
 		std::vector<AST::GraphQLInputValueDefinition> Any(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close);
 
 		std::vector<AST::GraphQLArgument> ParseArguments();
 		AST::GraphQLArgument ParseArgument();
-		AST::GraphQLValue ExpectColonAndParseValueLiteral(bool is_content);
-		AST::GraphQLValue ParseValueLiteral(bool is_constant);
+		AST::GraphQLValue* ExpectColonAndParseValueLiteral(bool is_content);
+		AST::GraphQLValue* ParseValueLiteral(bool is_constant);
 
 		AST::GraphQLName ParseName();
 		AST::GraphQLComment* ParseComment();
@@ -96,27 +96,27 @@ namespace GraphQLParser {
 		std::vector<AST::GraphQLDirective> ParseDirectives();
 		AST::GraphQLDirective ParseDirective();
 
-		AST::GraphQLValue ParseList(bool is_constant);
-		AST::GraphQLValue ParseObject(bool is_constant);
-		AST::GraphQLValue ParseInt(bool is_constant);
-		AST::GraphQLValue ParseFloat(bool is_constant);
-		AST::GraphQLValue ParseString(bool is_constant);
-		AST::GraphQLValue ParseNameValue(bool is_constant);
-		AST::GraphQLVariable ParseVariable();
+		AST::GraphQLValue* ParseList(bool is_constant);
+		AST::GraphQLValue* ParseObject(bool is_constant);
+		AST::GraphQLValue* ParseInt(bool is_constant);
+		AST::GraphQLValue* ParseFloat(bool is_constant);
+		AST::GraphQLValue* ParseString(bool is_constant);
+		AST::GraphQLValue* ParseNameValue(bool is_constant);
+		AST::GraphQLVariable* ParseVariable();
 
-		AST::GraphQLValue ParseConstantValue();
-		AST::GraphQLValue ParseValueValue();
+		AST::GraphQLValue* ParseConstantValue();
+		AST::GraphQLValue* ParseValueValue();
 
 		std::vector<AST::GraphQLObjectField> ParseObjectFields(bool is_constant);
 		AST::GraphQLObjectField ParseObjectField(bool is_constant);
 
-		AST::GraphQLValue ParseBooleanValue(Token token);
-		AST::GraphQLValue ParseNullValue(Token token);
-		AST::GraphQLValue ParseEnumValue(Token token);
+		AST::GraphQLValue* ParseBooleanValue(Token token);
+		AST::GraphQLValue* ParseNullValue(Token token);
+		AST::GraphQLValue* ParseEnumValue(Token token);
 
 		AST::GraphQLType AdvanceThroughColonAndParseType();
 		AST::GraphQLType ParseType();
-		AST::GraphQLValue SkipEqualsAndParseValueLiteral();
+		AST::GraphQLValue* SkipEqualsAndParseValueLiteral();
 
 		AST::ASTNode* ParseNamedDefinition();
 		AST::GraphQLFragmentDefinition* ParseFragmentDefinition();
@@ -132,7 +132,7 @@ namespace GraphQLParser {
 		AST::GraphQLFieldDefinition ParseFieldDefinition();
 		std::vector<AST::GraphQLInputValueDefinition> ParseArgumentDefs();
 		AST::GraphQLInputValueDefinition ParseInputValueDef();
-		AST::GraphQLValue GetDefaultConstantValue();
+		AST::GraphQLValue* GetDefaultConstantValue();
 
 		AST::GraphQLInterfaceTypeDefinition* ParseInterfaceTypeDefinition();
 

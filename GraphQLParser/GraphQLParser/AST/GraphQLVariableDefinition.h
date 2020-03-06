@@ -11,13 +11,13 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLVariableDefinition : public ASTNode {
 		public:
-			GraphQLVariableDefinition(GraphQLVariable variable, GraphQLType type, GraphQLValue default_value);
+			GraphQLVariableDefinition(GraphQLVariable* variable, GraphQLType type, GraphQLValue* default_value);
 
-			GraphQLVariable Variable;
+			GraphQLVariable* Variable;
 
 			GraphQLType Type;
 			
-			GraphQLValue DefaultValue;
+			GraphQLValue* DefaultValue;
 		};
 	}
 }

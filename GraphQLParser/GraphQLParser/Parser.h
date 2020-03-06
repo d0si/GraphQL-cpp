@@ -10,6 +10,7 @@ namespace GraphQLParser {
 		Lexer lexer;
 
 	public:
+		Parser();
 		Parser(Lexer lexer);
 
 		AST::GraphQLDocument Parse(Source source);

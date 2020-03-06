@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLArgument::GraphQLArgument(GraphQLName name, GraphQLValue value) : ASTNode(ASTNodeKind::Argument), Name(name), Value(value) {
+		GraphQLArgument::GraphQLArgument(GraphQLName name, GraphQLValue* value) : ASTNode(ASTNodeKind::Argument), Name(name), Value(value) {
 
 		}
 	}

@@ -198,12 +198,12 @@ namespace GraphQLParser {
 		return nodes;
 	}
 
-	std::vector<AST::GraphQLValue> ParserContext::Any(TokenKind open, AST::GraphQLValue(*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close) {
+	std::vector<AST::GraphQLValue*> ParserContext::Any(TokenKind open, AST::GraphQLValue* (*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close) {
 		Expect(open);
 
 		ParseComment();
 
-		std::vector<AST::GraphQLValue> nodes;
+		std::vector<AST::GraphQLValue*> nodes;
 
 		while (!Skip(close)) {
 			nodes.push_back(next(this, is_constant));
@@ -262,14 +262,14 @@ namespace GraphQLParser {
 		return argument;
 	}
 
-	AST::GraphQLValue ParserContext::ExpectColonAndParseValueLiteral(bool is_constant) {
+	AST::GraphQLValue* ParserContext::ExpectColonAndParseValueLiteral(bool is_constant) {
 		Expect(TokenKind::COLON);
 
 		return ParseValueLiteral(is_constant);
 	}
 
-	AST::GraphQLValue ParserContext::ParseValueLiteral(bool is_constant) {
-		AST::GraphQLValue value;
+	AST::GraphQLValue* ParserContext::ParseValueLiteral(bool is_constant) {
+		AST::GraphQLValue* value = nullptr;
 
 		switch (current_token.Kind) {
 		case TokenKind::BRACKET_L:
@@ -572,12 +572,12 @@ namespace GraphQLParser {
 		return directive;
 	}
 
-	AST::GraphQLValue ParserContext::ParseList(bool is_constant) {
+	AST::GraphQLValue* ParserContext::ParseList(bool is_constant) {
 		int start = current_token.Start;
 
-		AST::GraphQLListValue list(
+		AST::GraphQLListValue* list = new AST::GraphQLListValue(
 			AST::ASTNodeKind::ListValue,
-			Any(TokenKind::BRACKET_L, [](ParserContext* context, bool is_constant) -> AST::GraphQLValue {
+			Any(TokenKind::BRACKET_L, [](ParserContext* context, bool is_constant) -> AST::GraphQLValue* {
 				if (is_constant) {
 					return context->ParseConstantValue();
 				}
@@ -586,57 +586,57 @@ namespace GraphQLParser {
 				}
 				}, is_constant, TokenKind::BRACKET_R)
 		);
-		list.Location = GetLocation(start);
-		list.AstValue = source.Body.substr(start, current_token.End - start - 1);
+		list->Location = GetLocation(start);
+		list->AstValue = source.Body.substr(start, current_token.End - start - 1);
 
 		return list;
 	}
 
-	AST::GraphQLValue ParserContext::ParseObject(bool is_constant) {
+	AST::GraphQLValue* ParserContext::ParseObject(bool is_constant) {
 		AST::GraphQLComment* comment = GetComment();
 		int start = current_token.Start;
 
-		AST::GraphQLObjectValue value;
-		value.Comment = comment;
-		value.Fields = ParseObjectFields(is_constant);
-		value.Location = GetLocation(start);
+		AST::GraphQLObjectValue* value = new AST::GraphQLObjectValue;
+		value->Comment = comment;
+		value->Fields = ParseObjectFields(is_constant);
+		value->Location = GetLocation(start);
 
 		return value;
 	}
 
-	AST::GraphQLValue ParserContext::ParseInt(bool is_constant) {
+	AST::GraphQLValue* ParserContext::ParseInt(bool is_constant) {
 		Token token = current_token;
 		Advance();
 
-		AST::GraphQLScalarValue value(AST::ASTNodeKind::IntValue, token.Value);
-		value.Location = GetLocation(token.Start);
+		AST::GraphQLScalarValue* value = new AST::GraphQLScalarValue(AST::ASTNodeKind::IntValue, token.Value);
+		value->Location = GetLocation(token.Start);
 
 		return value;
 	}
 
-	AST::GraphQLValue ParserContext::ParseFloat(bool is_constant) {
-		Token token = current_token;
-
-		Advance();
-
-		AST::GraphQLScalarValue value(AST::ASTNodeKind::FloatValue, token.Value);
-		value.Location = GetLocation(token.Start);
-
-		return value;
-	}
-
-	AST::GraphQLValue ParserContext::ParseString(bool is_constant) {
+	AST::GraphQLValue* ParserContext::ParseFloat(bool is_constant) {
 		Token token = current_token;
 
 		Advance();
 
-		AST::GraphQLScalarValue value(AST::ASTNodeKind::StringValue, token.Value);
-		value.Location = GetLocation(token.Start);
+		AST::GraphQLScalarValue* value = new AST::GraphQLScalarValue(AST::ASTNodeKind::FloatValue, token.Value);
+		value->Location = GetLocation(token.Start);
 
 		return value;
 	}
 
-	AST::GraphQLValue ParserContext::ParseNameValue(bool is_constant) {
+	AST::GraphQLValue* ParserContext::ParseString(bool is_constant) {
+		Token token = current_token;
+
+		Advance();
+
+		AST::GraphQLScalarValue* value = new AST::GraphQLScalarValue(AST::ASTNodeKind::StringValue, token.Value);
+		value->Location = GetLocation(token.Start);
+
+		return value;
+	}
+
+	AST::GraphQLValue* ParserContext::ParseNameValue(bool is_constant) {
 		Token token = current_token;
 
 		if (token.Value == "true" || token.Value == "false") {
@@ -654,22 +654,22 @@ namespace GraphQLParser {
 		throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
 	}
 
-	AST::GraphQLVariable ParserContext::ParseVariable() {
+	AST::GraphQLVariable* ParserContext::ParseVariable() {
 		int start = current_token.Start;
 		Expect(TokenKind::DOLLAR);
 		auto name = GetName();
 
-		AST::GraphQLVariable variable(name);
-		variable.Location = GetLocation(start);
+		AST::GraphQLVariable* variable = new AST::GraphQLVariable(name);
+		variable->Location = GetLocation(start);
 
 		return variable;
 	}
 
-	AST::GraphQLValue ParserContext::ParseConstantValue() {
+	AST::GraphQLValue* ParserContext::ParseConstantValue() {
 		return ParseValueLiteral(true);
 	}
 
-	AST::GraphQLValue ParserContext::ParseValueValue() {
+	AST::GraphQLValue* ParserContext::ParseValueValue() {
 		return ParseValueLiteral(false);
 	}
 
@@ -697,29 +697,29 @@ namespace GraphQLParser {
 		return field;
 	}
 
-	AST::GraphQLValue ParserContext::ParseBooleanValue(Token token) {
+	AST::GraphQLValue* ParserContext::ParseBooleanValue(Token token) {
 		Advance();
 
-		AST::GraphQLScalarValue value(AST::ASTNodeKind::BooleanValue, token.Value);
-		value.Location = GetLocation(token.Start);
+		AST::GraphQLScalarValue* value = new AST::GraphQLScalarValue(AST::ASTNodeKind::BooleanValue, token.Value);
+		value->Location = GetLocation(token.Start);
 
 		return value;
 	}
 
-	AST::GraphQLValue ParserContext::ParseNullValue(Token token) {
+	AST::GraphQLValue* ParserContext::ParseNullValue(Token token) {
 		Advance();
 
-		AST::GraphQLScalarValue value(AST::ASTNodeKind::NullValue, "");
-		value.Location = GetLocation(token.Start);
+		AST::GraphQLScalarValue* value = new AST::GraphQLScalarValue(AST::ASTNodeKind::NullValue, "");
+		value->Location = GetLocation(token.Start);
 
 		return value;
 	}
 
-	AST::GraphQLValue ParserContext::ParseEnumValue(Token token) {
+	AST::GraphQLValue* ParserContext::ParseEnumValue(Token token) {
 		Advance();
 
-		AST::GraphQLScalarValue value(AST::ASTNodeKind::EnumValue, token.Value);
-		value.Location = GetLocation(token.Start);
+		AST::GraphQLScalarValue* value = new AST::GraphQLScalarValue(AST::ASTNodeKind::EnumValue, token.Value);
+		value->Location = GetLocation(token.Start);
 
 		return value;
 	}
@@ -754,8 +754,8 @@ namespace GraphQLParser {
 		return type;
 	}
 
-	AST::GraphQLValue ParserContext::SkipEqualsAndParseValueLiteral() {
-		return Skip(TokenKind::EQUALS) ? ParseValueLiteral(true) : AST::GraphQLValue();
+	AST::GraphQLValue* ParserContext::SkipEqualsAndParseValueLiteral() {
+		return Skip(TokenKind::EQUALS) ? ParseValueLiteral(true) : nullptr;
 	}
 
 	AST::ASTNode* ParserContext::ParseNamedDefinition() {
@@ -964,8 +964,8 @@ namespace GraphQLParser {
 		return definition;
 	}
 
-	AST::GraphQLValue ParserContext::GetDefaultConstantValue() {
-		AST::GraphQLValue default_value;
+	AST::GraphQLValue* ParserContext::GetDefaultConstantValue() {
+		AST::GraphQLValue* default_value = nullptr;
 
 		if (Skip(TokenKind::EQUALS)) {
 			default_value = ParseConstantValue();
@@ -1032,7 +1032,7 @@ namespace GraphQLParser {
 		auto directives = ParseDirectives();
 		auto values = ManyEnumValueDefinition(TokenKind::BRACE_L, [](ParserContext* context) -> AST::GraphQLEnumValueDefinition {
 			return context->ParseEnumValueDefinition();
-				}, TokenKind::BRACE_R);
+			}, TokenKind::BRACE_R);
 
 		AST::GraphQLEnumTypeDefinition* definition = new AST::GraphQLEnumTypeDefinition(
 			name,

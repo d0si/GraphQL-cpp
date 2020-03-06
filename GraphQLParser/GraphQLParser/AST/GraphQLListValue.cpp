@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLListValue::GraphQLListValue(ASTNodeKind kind, std::vector<GraphQLValue> values) : GraphQLValue(kind), Values(values) {
+		GraphQLListValue::GraphQLListValue(ASTNodeKind kind, std::vector<GraphQLValue*> values) : GraphQLValue(kind), Values(values) {
 
 		}
 	}

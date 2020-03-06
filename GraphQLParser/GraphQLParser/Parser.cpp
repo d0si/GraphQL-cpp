@@ -2,6 +2,10 @@
 #include <GraphQLParser/ParserContext.h>
 
 namespace GraphQLParser {
+	Parser::Parser() : Parser(Lexer()){
+
+	}
+
 	Parser::Parser(Lexer lexer) : lexer(lexer) {
 
 	}

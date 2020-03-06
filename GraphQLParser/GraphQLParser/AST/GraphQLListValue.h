@@ -9,11 +9,11 @@ namespace GraphQLParser {
 		class GraphQLListValue : public GraphQLValue {
 		public:
 			GraphQLListValue(ASTNodeKind kind);
-			GraphQLListValue(ASTNodeKind kind, std::vector<GraphQLValue> values);
+			GraphQLListValue(ASTNodeKind kind, std::vector<GraphQLValue*> values);
 
 			std::string AstValue;
 
-			std::vector<GraphQLValue> Values;
+			std::vector<GraphQLValue*> Values;
 		};
 	}
 }
