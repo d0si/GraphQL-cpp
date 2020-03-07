@@ -16,6 +16,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphQL", "GraphQL\GraphQL.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphQLParserTests", "GraphQLParserTests\GraphQLParserTests.vcxproj", "{41599FAC-B65F-49C4-8023-B20E757F8C55}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphQLTests", "GraphQLTests\GraphQLTests.vcxproj", "{3D73FBB0-9E28-4CDD-BD4A-484777046961}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,14 @@ Global
 		{41599FAC-B65F-49C4-8023-B20E757F8C55}.Release|x64.Build.0 = Release|x64
 		{41599FAC-B65F-49C4-8023-B20E757F8C55}.Release|x86.ActiveCfg = Release|Win32
 		{41599FAC-B65F-49C4-8023-B20E757F8C55}.Release|x86.Build.0 = Release|Win32
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Debug|x64.ActiveCfg = Debug|x64
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Debug|x64.Build.0 = Debug|x64
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Debug|x86.ActiveCfg = Debug|Win32
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Debug|x86.Build.0 = Debug|Win32
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Release|x64.ActiveCfg = Release|x64
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Release|x64.Build.0 = Release|x64
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Release|x86.ActiveCfg = Release|Win32
+		{3D73FBB0-9E28-4CDD-BD4A-484777046961}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
