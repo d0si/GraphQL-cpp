@@ -4,9 +4,11 @@ namespace GraphQL {
 	namespace Types {
 		class ISchema {
 		public:
-			/*bool Initialized{ get; }
+			bool Initialized;
+
 			void Initialize();
-			IFieldNameConverter FieldNameConverter{ get; set; }
+			
+			/*IFieldNameConverter FieldNameConverter{ get; set; }
 			IObjectGraphType Query{ get; set; }
 			IObjectGraphType Mutation{ get; set; }
 			IObjectGraphType Subscription{ get; set; }

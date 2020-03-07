@@ -3,6 +3,10 @@
 
 namespace GraphQL {
 	namespace Types {
+		Schema::Schema() {
+
+		}
+
 		ISchema Schema::For(std::string type_definitions) {
 			auto builder = Utilities::SchemaBuilder();
 

@@ -5,6 +5,7 @@
 #include <GraphQLParser/Source.h>
 #include <GraphQLParser/AST/GraphQLTypeDefinition.h>
 #include <GraphQLParser/AST/GraphQLTypeExtensionDefinition.h>
+#include <GraphQL/Types/Schema.h>
 
 namespace GraphQL {
 	namespace Utilities {
@@ -52,6 +53,13 @@ namespace GraphQL {
 		}
 
 		Types::ISchema SchemaBuilder::BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document) {
+			// TODO: Directives
+
+			auto schema = Types::Schema(/*ServiceProvider*/);
+
+			PreConfigure(schema);
+
+			auto directives = std::vector<Types::DirectiveGraphType>();
 			throw std::exception("Not implemented");
 		}
 	}

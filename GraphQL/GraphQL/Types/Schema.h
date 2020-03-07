@@ -7,6 +7,10 @@ namespace GraphQL {
 	namespace Types {
 		class Schema : public ISchema {
 		public:
+			Schema();
+			//Schema(/*serviceprovider*/);
+
+
 			static ISchema For(std::string type_definitions);
 		};
 	}
