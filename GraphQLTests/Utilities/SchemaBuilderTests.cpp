@@ -21,7 +21,7 @@ type Query {
 
 				auto query = schema.Query;
 				Assert::IsNotNull(query);
-				Assert::AreEqual(std::string("Query"), querty->Name);
+				Assert::AreEqual(std::string("Query"), query->Name);
 				Assert::IsTrue(query->Fields.size() == 1);
 
 				Assert::AreEqual(std::string("id"), query->Fields[0]->Name);
