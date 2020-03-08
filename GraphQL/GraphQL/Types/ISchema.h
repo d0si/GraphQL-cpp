@@ -4,15 +4,17 @@ namespace GraphQL {
 	namespace Types {
 		class ISchema {
 		public:
-			bool Initialized;
+			bool Initialized = false;
 
 			void Initialize();
+
+
 			
-			/*IFieldNameConverter FieldNameConverter{ get; set; }
-			IObjectGraphType Query{ get; set; }
-			IObjectGraphType Mutation{ get; set; }
-			IObjectGraphType Subscription{ get; set; }
-			IEnumerable<DirectiveGraphType> Directives{ get; set; }
+			/*IFieldNameConverter FieldNameConverter{ get; set; }*/
+			IObjectGraphType* Query;
+			IObjectGraphType* Mutation;
+			IObjectGraphType* Subscription;
+			/*IEnumerable<DirectiveGraphType> Directives{ get; set; }
 			IEnumerable<IGraphType> AllTypes{ get; }
 			IGraphType FindType(string name);
 			DirectiveGraphType FindDirective(string name);

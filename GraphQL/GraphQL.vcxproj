@@ -147,6 +147,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GraphQL\Types\DirectiveGraphType.cpp" />
     <ClCompile Include="GraphQL\Types\INamedType.cpp" />
     <ClCompile Include="GraphQL\Types\Schema.cpp" />
     <ClCompile Include="GraphQL\Utilities\SchemaBuilder.cpp" />
@@ -154,9 +155,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphQL\Types\DirectiveGraphType.h" />
+    <ClInclude Include="GraphQL\Types\DirectiveLocation.h" />
     <ClInclude Include="GraphQL\Types\IGraphType.h" />
     <ClInclude Include="GraphQL\Types\INamedType.h" />
+    <ClInclude Include="GraphQL\Types\IObjectGraphType.h" />
     <ClInclude Include="GraphQL\Types\ISchema.h" />
+    <ClInclude Include="GraphQL\Types\QueryArgument.h" />
     <ClInclude Include="GraphQL\Types\Schema.h" />
     <ClInclude Include="GraphQL\Types\TypeCollectionContext.h" />
     <ClInclude Include="GraphQL\Utilities\SchemaBuilder.h" />

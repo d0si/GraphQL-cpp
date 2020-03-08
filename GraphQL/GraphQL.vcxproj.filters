@@ -39,6 +39,9 @@
     <ClCompile Include="GraphQL\Types\INamedType.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
+    <ClCompile Include="GraphQL\Types\DirectiveGraphType.cpp">
+      <Filter>Source Files\Types</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphQL\Utilities\SchemaBuilder.h">
@@ -60,6 +63,15 @@
       <Filter>Header Files\Types</Filter>
     </ClInclude>
     <ClInclude Include="GraphQL\Types\TypeCollectionContext.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQL\Types\DirectiveLocation.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQL\Types\QueryArgument.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQL\Types\IObjectGraphType.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
   </ItemGroup>

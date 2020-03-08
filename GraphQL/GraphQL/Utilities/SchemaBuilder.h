@@ -16,6 +16,8 @@ namespace GraphQL {
 			void Validate(GraphQLParser::AST::GraphQLDocument document);
 
 			Types::ISchema BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document);
+
+			void PreConfigure(Types::ISchema schema);
 		};
 	}
 }

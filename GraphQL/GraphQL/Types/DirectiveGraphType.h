@@ -1,32 +1,24 @@
 #pragma once
 
+#include <vector>
+#include <string>
+#include <GraphQL/Types/DirectiveLocation.h>
+#include <GraphQL/Types/QueryArgument.h>
+
 namespace GraphQL {
 	namespace Types {
-		enum DirectiveLocation {
-			Query,
-			Mutation,
-			Subscription,
-			Field,
-			FragmentDescription,
-			FragmentSpread,
-			InlineFragment,
-
-			Schema,
-			Scalar,
-			Object,
-			FieldDefinition,
-			ArgumentDefinition,
-			Interface,
-			Union,
-			Enum,
-			EnumValue,
-			InputObject,
-			InputFieldDefinition
-		};
-
 		class DirectiveGraphType {
 		public:
+			DirectiveGraphType(std::string name, std::vector<DirectiveLocation> locations);
+			
+			std::string Name;
 
+			std::string Description;
+
+			// TODO: QueryArguments validation
+			std::vector<QueryArgument> Arguments;
+
+			std::vector<DirectiveLocation> Locations;
 		};
 	}
 }

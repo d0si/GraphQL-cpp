@@ -5,7 +5,16 @@
 #include <GraphQLParser/Source.h>
 #include <GraphQLParser/AST/GraphQLTypeDefinition.h>
 #include <GraphQLParser/AST/GraphQLTypeExtensionDefinition.h>
+#include <GraphQLParser/AST/GraphQLSchemaDefinition.h>
+#include <GraphQLParser/AST/GraphQLInterfaceTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLEnumTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLUnionTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLInputObjectTypeDefinition.h>
+#include <GraphQLParser/AST/GraphQLDirectiveDefinition.h>
 #include <GraphQL/Types/Schema.h>
+#include <GraphQL/Types/DirectiveGraphType.h>
+
+namespace AST = GraphQLParser::AST;
 
 namespace GraphQL {
 	namespace Utilities {
@@ -59,8 +68,98 @@ namespace GraphQL {
 
 			PreConfigure(schema);
 
-			auto directives = std::vector<Types::DirectiveGraphType>();
-			throw std::exception("Not implemented");
+			auto directives = std::vector<Types::DirectiveGraphType*>();
+
+			AST::GraphQLSchemaDefinition* schema_def = nullptr;
+
+			for (auto def : document.Definitions) {
+				switch (def->Kind) {
+				case AST::ASTNodeKind::SchemaDefinition:
+					schema_def = static_cast<AST::GraphQLSchemaDefinition*>(def);
+					schema.SetAstType(schema_def);
+
+					VisitNode(schema, [](cdasmklc) {});
+
+					break;
+				case AST::ASTNodeKind::ObjectTypeDefinition:
+					auto type = ToObjectGraphType(static_cast<AST::GraphQLObjectTypeDefinition*>(def));
+					_types[type->Name] = type;
+
+					break;
+				case AST::ASTNodeKind::TypeExtensionDefinition:
+					auto type = ToObjectGraphType(static_cast<AST::GraphQLTypeExtensionDefinition*>(def)->Definition, true);
+					_types[type->Name] = type;
+
+					break;
+				case AST::ASTNodeKind::InterfaceTypeDefinition:
+					auto type = ToInterfaceType(static_cast<AST::GraphQLInterfaceTypeDefinition*>(def));
+					_types[type->Name] = type;
+
+					break;
+				case AST::ASTNodeKind::EnumTypeDefinition:
+					auto type = ToEnumerationType(static_cast<AST::GraphQLEnumTypeDefinition*>(def));
+					_types[type->Name] = type;
+
+					break;
+				case AST::ASTNodeKind::UnionTypeDefinition:
+					auto type = ToUnionType(static_cast<AST::GraphQLUnionTypeDefinition*>(def));
+					_types[type->Name] = type;
+
+					break;
+				case AST::ASTNodeKind::InputObjectTypeDefinition:
+					auto type = ToInputObjectType(static_cast<AST::GraphQLInputObjectTypeDefinition*>(def));
+					_types[type->Name] = type;
+
+					break;
+				case AST::ASTNodeKind::DirectiveDefinition:
+					auto directive = ToDirective(static_cast<AST::GraphQLDirectiveDefinition*>(def));
+					directives.push_back(directive);
+
+					break;
+				}
+			}
+
+			if (schema_def != nullptr) {
+				for (auto operation_type_def : schema_def->OperationTypes) {
+					auto type_name = operation_type_def.Type.Name.Value;
+					auto type = static_cast<IObjectGraphType*>(GetType(type_name));
+
+					switch (operation_type_def.Operation) {
+					case AST::OperationType::Query:
+						schema.Query = type;
+
+						break;
+					case AST::OperationType::Mutation:
+						schema.Mutation = type;
+
+						break;
+					case AST::OperationType::Subscription:
+						schema.Subscription = type;
+
+						break;
+					default:
+						throw std::exception("Unknown operation type " + operation_type_def.Operation);
+					}
+				}
+			}
+			else {
+				schema.Query = static_cast<IObjectGraphType*>(GetType("Query"));
+				schema.Mutation = static_cast<IObjectGraphType*>(GetType("Mutation"));
+				schema.Subscription = static_cast<IObjectGraphType*>(GetType("Subscription"));
+			}
+
+			auto type_list = _types.Values.ToArray();
+			type_list.Apply(schema.RegisterType);
+			schema.RegisterDirectives(directives);
+
+			return schema;
 		}
+
+		void SchemaBuilder::PreConfigure(Types::ISchema schema) {
+
+		}
+
+
+
 	}
 }
