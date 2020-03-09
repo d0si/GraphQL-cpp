@@ -74,5 +74,8 @@
     <ClInclude Include="GraphQL\Types\IObjectGraphType.h">
       <Filter>Header Files\Types</Filter>
     </ClInclude>
+    <ClInclude Include="GraphQL\Types\IComplexGraphType.h">
+      <Filter>Header Files\Types</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

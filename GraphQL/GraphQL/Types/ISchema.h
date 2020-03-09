@@ -1,19 +1,26 @@
 #pragma once
 
+#include <vector>
+#include <GraphQL/Types/IObjectGraphType.h>
+
 namespace GraphQL {
 	namespace Types {
 		class ISchema {
 		public:
-			bool Initialized = false;
+			//bool Initialized = false;
 
-			void Initialize();
+			//virtual void Initialize() = 0;
 
-
-			
 			/*IFieldNameConverter FieldNameConverter{ get; set; }*/
+
 			IObjectGraphType* Query;
+
 			IObjectGraphType* Mutation;
+
 			IObjectGraphType* Subscription;
+
+			// std::vector<DirectiveGraphType> Directives;
+
 			/*IEnumerable<DirectiveGraphType> Directives{ get; set; }
 			IEnumerable<IGraphType> AllTypes{ get; }
 			IGraphType FindType(string name);

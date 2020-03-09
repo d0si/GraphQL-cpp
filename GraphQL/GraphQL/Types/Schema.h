@@ -11,7 +11,14 @@ namespace GraphQL {
 			//Schema(/*serviceprovider*/);
 
 
-			static ISchema For(std::string type_definitions);
+			static ISchema* For(std::string type_definitions);
+
+
+			//void Initialize();
+
+		
+		private:
+			//IGraphType FindType(std::string name);
 		};
 	}
 }

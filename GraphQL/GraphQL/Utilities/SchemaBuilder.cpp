@@ -13,12 +13,13 @@
 #include <GraphQLParser/AST/GraphQLDirectiveDefinition.h>
 #include <GraphQL/Types/Schema.h>
 #include <GraphQL/Types/DirectiveGraphType.h>
+#include <GraphQL/Types/IObjectGraphType.h>
 
 namespace AST = GraphQLParser::AST;
 
 namespace GraphQL {
 	namespace Utilities {
-		Types::ISchema SchemaBuilder::Build(std::string type_definitions) {
+		Types::ISchema* SchemaBuilder::Build(std::string type_definitions) {
 			auto document = Parse(type_definitions);
 
 			Validate(document);
@@ -61,10 +62,10 @@ namespace GraphQL {
 			}
 		}
 
-		Types::ISchema SchemaBuilder::BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document) {
+		Types::ISchema* SchemaBuilder::BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document) {
 			// TODO: Directives
 
-			auto schema = Types::Schema(/*ServiceProvider*/);
+			auto schema = new Types::Schema(/*ServiceProvider*/);
 
 			PreConfigure(schema);
 
@@ -76,7 +77,7 @@ namespace GraphQL {
 				switch (def->Kind) {
 				case AST::ASTNodeKind::SchemaDefinition:
 					schema_def = static_cast<AST::GraphQLSchemaDefinition*>(def);
-					schema.SetAstType(schema_def);
+					//schema->SetAstType(schema_def);
 
 					VisitNode(schema, [](cdasmklc) {});
 
@@ -122,7 +123,7 @@ namespace GraphQL {
 			if (schema_def != nullptr) {
 				for (auto operation_type_def : schema_def->OperationTypes) {
 					auto type_name = operation_type_def.Type.Name.Value;
-					auto type = static_cast<IObjectGraphType*>(GetType(type_name));
+					auto type = static_cast<Types::IObjectGraphType*>(GetType(type_name));
 
 					switch (operation_type_def.Operation) {
 					case AST::OperationType::Query:
@@ -143,9 +144,9 @@ namespace GraphQL {
 				}
 			}
 			else {
-				schema.Query = static_cast<IObjectGraphType*>(GetType("Query"));
-				schema.Mutation = static_cast<IObjectGraphType*>(GetType("Mutation"));
-				schema.Subscription = static_cast<IObjectGraphType*>(GetType("Subscription"));
+				schema.Query = static_cast<Types::IObjectGraphType*>(GetType("Query"));
+				schema.Mutation = static_cast<Types::IObjectGraphType*>(GetType("Mutation"));
+				schema.Subscription = static_cast<Types::IObjectGraphType*>(GetType("Subscription"));
 			}
 
 			auto type_list = _types.Values.ToArray();
@@ -155,7 +156,7 @@ namespace GraphQL {
 			return schema;
 		}
 
-		void SchemaBuilder::PreConfigure(Types::ISchema schema) {
+		void SchemaBuilder::PreConfigure(Types::ISchema* schema) {
 
 		}
 
