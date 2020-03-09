@@ -3,6 +3,7 @@
 #include <string>
 #include <GraphQL/Types/ISchema.h>
 #include <GraphQLParser/AST/GraphQLDocument.h>
+#include <GraphQL/Types/IObjectGraphType.h>
 
 namespace GraphQL {
 	namespace Utilities {
@@ -18,6 +19,9 @@ namespace GraphQL {
 			Types::ISchema* BuildSchemaFrom(GraphQLParser::AST::GraphQLDocument document);
 
 			void PreConfigure(Types::ISchema* schema);
+
+
+			Types::IObjectGraphType* ToObjectGraphType(GraphQLObjectTypeDefinition ast_type, bool is_extension_type = false);
 		};
 	}
 }

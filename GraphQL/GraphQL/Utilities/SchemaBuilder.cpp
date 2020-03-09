@@ -13,7 +13,6 @@
 #include <GraphQLParser/AST/GraphQLDirectiveDefinition.h>
 #include <GraphQL/Types/Schema.h>
 #include <GraphQL/Types/DirectiveGraphType.h>
-#include <GraphQL/Types/IObjectGraphType.h>
 
 namespace AST = GraphQLParser::AST;
 
