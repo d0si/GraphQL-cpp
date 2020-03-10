@@ -31,7 +31,7 @@ namespace GraphQLParser {
 	private:
 		Lexer lexer;
 		Source source;
-		std::stack<AST::GraphQLComment*> comments;
+		std::stack<std::shared_ptr<AST::GraphQLComment>> comments;
 		Token current_token;
 
 	public:
@@ -39,14 +39,14 @@ namespace GraphQLParser {
 
 		AST::GraphQLDocument Parse();
 
-		AST::GraphQLComment* GetComment();
+		std::shared_ptr<AST::GraphQLComment> GetComment();
 
 	private:
 		void Advance();
 
-		AST::GraphQLDocument CreateDocument(int start, std::vector<AST::ASTNode*> definitions);
-		AST::ASTNode* CreateOperationDefinition(int start);
-		AST::ASTNode* CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name);
+		AST::GraphQLDocument CreateDocument(int start, std::vector<std::shared_ptr<AST::ASTNode>> definitions);
+		std::shared_ptr<AST::ASTNode> CreateOperationDefinition(int start);
+		std::shared_ptr<AST::ASTNode> CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name);
 
 		void Expect(TokenKind kind);
 		void ExpectKeyword(std::string keyword);
@@ -61,20 +61,20 @@ namespace GraphQLParser {
 		std::vector<AST::GraphQLInputValueDefinition> ManyInputValueDefinition(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close);
 		std::vector<AST::GraphQLEnumValueDefinition> ManyEnumValueDefinition(TokenKind open, AST::GraphQLEnumValueDefinition(*next)(ParserContext*), TokenKind close);
 
-		std::vector<AST::GraphQLValue*> Any(TokenKind open, AST::GraphQLValue* (*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close);
+		std::vector<std::shared_ptr<AST::GraphQLValue>> Any(TokenKind open, std::shared_ptr<AST::GraphQLValue> (*next)(ParserContext*, bool is_constant), bool is_constant, TokenKind close);
 		std::vector<AST::GraphQLFieldDefinition> Any(TokenKind open, AST::GraphQLFieldDefinition(*next)(ParserContext*), TokenKind close);
 		std::vector<AST::GraphQLInputValueDefinition> Any(TokenKind open, AST::GraphQLInputValueDefinition(*next)(ParserContext*), TokenKind close);
 
 		std::vector<AST::GraphQLArgument> ParseArguments();
 		AST::GraphQLArgument ParseArgument();
-		AST::GraphQLValue* ExpectColonAndParseValueLiteral(bool is_content);
-		AST::GraphQLValue* ParseValueLiteral(bool is_constant);
+		std::shared_ptr<AST::GraphQLValue> ExpectColonAndParseValueLiteral(bool is_content);
+		std::shared_ptr<AST::GraphQLValue> ParseValueLiteral(bool is_constant);
 
 		AST::GraphQLName ParseName();
-		AST::GraphQLComment* ParseComment();
-		std::vector<AST::ASTNode*> ParseDefinitionsIfNotEOF();
-		AST::ASTNode* ParseDefinition();
-		AST::ASTNode* ParseOperationDefinition();
+		std::shared_ptr<AST::GraphQLComment> ParseComment();
+		std::vector<std::shared_ptr<AST::ASTNode>> ParseDefinitionsIfNotEOF();
+		std::shared_ptr<AST::ASTNode> ParseDefinition();
+		std::shared_ptr<AST::ASTNode> ParseOperationDefinition();
 		AST::OperationType ParseOperationType();
 		AST::GraphQLDocument ParseDocument();
 		AST::ASTNode ParseSelection();
@@ -88,7 +88,7 @@ namespace GraphQLParser {
 		AST::GraphQLNamedType ParseNamedType();
 
 		AST::ASTNode ParseFieldSelection();
-		AST::GraphQLFieldSelection CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, AST::GraphQLComment* comment);
+		AST::GraphQLFieldSelection CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, std::shared_ptr<AST::GraphQLComment> comment);
 
 		std::vector<AST::GraphQLVariableDefinition> ParseVariableDefinitions();
 		AST::GraphQLVariableDefinition ParseVariableDefinition();
@@ -96,57 +96,57 @@ namespace GraphQLParser {
 		std::vector<AST::GraphQLDirective> ParseDirectives();
 		AST::GraphQLDirective ParseDirective();
 
-		AST::GraphQLValue* ParseList(bool is_constant);
-		AST::GraphQLValue* ParseObject(bool is_constant);
-		AST::GraphQLValue* ParseInt(bool is_constant);
-		AST::GraphQLValue* ParseFloat(bool is_constant);
-		AST::GraphQLValue* ParseString(bool is_constant);
-		AST::GraphQLValue* ParseNameValue(bool is_constant);
-		AST::GraphQLVariable* ParseVariable();
+		std::shared_ptr<AST::GraphQLValue> ParseList(bool is_constant);
+		std::shared_ptr<AST::GraphQLValue> ParseObject(bool is_constant);
+		std::shared_ptr<AST::GraphQLValue> ParseInt(bool is_constant);
+		std::shared_ptr<AST::GraphQLValue> ParseFloat(bool is_constant);
+		std::shared_ptr<AST::GraphQLValue> ParseString(bool is_constant);
+		std::shared_ptr<AST::GraphQLValue> ParseNameValue(bool is_constant);
+		std::shared_ptr<AST::GraphQLVariable> ParseVariable();
 
-		AST::GraphQLValue* ParseConstantValue();
-		AST::GraphQLValue* ParseValueValue();
+		std::shared_ptr<AST::GraphQLValue> ParseConstantValue();
+		std::shared_ptr<AST::GraphQLValue> ParseValueValue();
 
 		std::vector<AST::GraphQLObjectField> ParseObjectFields(bool is_constant);
 		AST::GraphQLObjectField ParseObjectField(bool is_constant);
 
-		AST::GraphQLValue* ParseBooleanValue(Token token);
-		AST::GraphQLValue* ParseNullValue(Token token);
-		AST::GraphQLValue* ParseEnumValue(Token token);
+		std::shared_ptr<AST::GraphQLValue> ParseBooleanValue(Token token);
+		std::shared_ptr<AST::GraphQLValue> ParseNullValue(Token token);
+		std::shared_ptr<AST::GraphQLValue> ParseEnumValue(Token token);
 
 		AST::GraphQLType AdvanceThroughColonAndParseType();
 		AST::GraphQLType ParseType();
-		AST::GraphQLValue* SkipEqualsAndParseValueLiteral();
+		std::shared_ptr<AST::GraphQLValue> SkipEqualsAndParseValueLiteral();
 
-		AST::ASTNode* ParseNamedDefinition();
-		AST::GraphQLFragmentDefinition* ParseFragmentDefinition();
+		std::shared_ptr<AST::ASTNode> ParseNamedDefinition();
+		std::shared_ptr<AST::GraphQLFragmentDefinition> ParseFragmentDefinition();
 		AST::GraphQLNamedType ExpectOnKeywordAndParseNamedType();
 
-		AST::GraphQLSchemaDefinition* ParseSchemaDefinition();
+		std::shared_ptr<AST::GraphQLSchemaDefinition> ParseSchemaDefinition();
 		AST::GraphQLOperationTypeDefinition ParseOperationTypeDefinition();
 
-		AST::GraphQLScalarTypeDefinition* ParseScalarTypeDefinition();
+		std::shared_ptr<AST::GraphQLScalarTypeDefinition> ParseScalarTypeDefinition();
 
-		AST::GraphQLObjectTypeDefinition* ParseObjectTypeDefinition();
+		std::shared_ptr<AST::GraphQLObjectTypeDefinition> ParseObjectTypeDefinition();
 		std::vector<AST::GraphQLNamedType> ParseImplementsInterfaces();
 		AST::GraphQLFieldDefinition ParseFieldDefinition();
 		std::vector<AST::GraphQLInputValueDefinition> ParseArgumentDefs();
 		AST::GraphQLInputValueDefinition ParseInputValueDef();
-		AST::GraphQLValue* GetDefaultConstantValue();
+		std::shared_ptr<AST::GraphQLValue> GetDefaultConstantValue();
 
-		AST::GraphQLInterfaceTypeDefinition* ParseInterfaceTypeDefinition();
+		std::shared_ptr<AST::GraphQLInterfaceTypeDefinition> ParseInterfaceTypeDefinition();
 
-		AST::GraphQLUnionTypeDefinition* ParseUnionTypeDefinition();
+		std::shared_ptr<AST::GraphQLUnionTypeDefinition> ParseUnionTypeDefinition();
 		std::vector<AST::GraphQLNamedType> ParseUnionMembers();
 
-		AST::GraphQLEnumTypeDefinition* ParseEnumTypeDefinition();
+		std::shared_ptr<AST::GraphQLEnumTypeDefinition> ParseEnumTypeDefinition();
 		AST::GraphQLEnumValueDefinition ParseEnumValueDefinition();
 
-		AST::GraphQLInputObjectTypeDefinition* ParseInputObjectTypeDefinition();
+		std::shared_ptr<AST::GraphQLInputObjectTypeDefinition> ParseInputObjectTypeDefinition();
 
-		AST::GraphQLTypeExtensionDefinition* ParseTypeExtensionDefinition();
+		std::shared_ptr<AST::GraphQLTypeExtensionDefinition> ParseTypeExtensionDefinition();
 
-		AST::GraphQLDirectiveDefinition* ParseDirectiveDefinition();
+		std::shared_ptr<AST::GraphQLDirectiveDefinition> ParseDirectiveDefinition();
 		bool ParseRepeatable();
 		std::vector<AST::GraphQLName> ParseDirectiveLocations();
 
