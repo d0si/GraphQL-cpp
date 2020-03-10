@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <GraphQLParser/AST/ASTNode.h>
 
@@ -8,9 +9,9 @@ namespace GraphQLParser {
 		class GraphQLDocument : public ASTNode {
 		public:
 			GraphQLDocument();
-			GraphQLDocument(std::vector<ASTNode*> definitions);
+			GraphQLDocument(std::vector<std::shared_ptr<ASTNode>> definitions);
 
-			std::vector<ASTNode*> Definitions;
+			std::vector<std::shared_ptr<ASTNode>> Definitions;
 		};
 	}
 }

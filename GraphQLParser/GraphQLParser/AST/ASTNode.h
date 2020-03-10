@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <GraphQLParser/AST/Enums.h>
 #include <GraphQLParser/AST/GraphQLLocation.h>
 
@@ -18,7 +19,7 @@ namespace GraphQLParser {
 
 			ASTNodeKind Kind;
 			GraphQLLocation Location;
-			GraphQLComment* Comment = nullptr;
+			std::shared_ptr<GraphQLComment> Comment;
 		};
 	}
 }

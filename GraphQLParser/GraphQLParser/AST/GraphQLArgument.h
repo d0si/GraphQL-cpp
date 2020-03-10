@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <GraphQLParser/AST/ASTNode.h>
 #include <GraphQLParser/AST/GraphQLName.h>
 #include <GraphQLParser/AST/GraphQLValue.h>
@@ -13,7 +14,7 @@ namespace GraphQLParser {
 
 			GraphQLName Name;
 
-			GraphQLValue* Value;
+			std::shared_ptr<GraphQLValue> Value;
 		};
 	}
 }

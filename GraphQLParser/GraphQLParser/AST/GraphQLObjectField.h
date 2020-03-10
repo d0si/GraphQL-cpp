@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <GraphQLParser/AST/ASTNode.h>
 #include <GraphQLParser/AST/GraphQLName.h>
@@ -10,11 +11,11 @@ namespace GraphQLParser {
 		class GraphQLObjectField: public ASTNode {
 		public:
 			GraphQLObjectField();
-			GraphQLObjectField(GraphQLName name, GraphQLValue* value);
+			GraphQLObjectField(GraphQLName name, std::shared_ptr<GraphQLValue> value);
 
 			GraphQLName Name;
 
-			GraphQLValue* Value;
+			std::shared_ptr<GraphQLValue> Value;
 		};
 	}
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <vector>
 #include <GraphQLParser/AST/ASTNode.h>
 #include <GraphQLParser/AST/GraphQLDirective.h>
@@ -11,13 +12,13 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLVariableDefinition : public ASTNode {
 		public:
-			GraphQLVariableDefinition(GraphQLVariable* variable, GraphQLType type, GraphQLValue* default_value);
+			GraphQLVariableDefinition(std::shared_ptr<GraphQLVariable> variable, GraphQLType type, std::shared_ptr<GraphQLValue> default_value);
 
-			GraphQLVariable* Variable;
+			std::shared_ptr<GraphQLVariable> Variable;
 
 			GraphQLType Type;
 			
-			GraphQLValue* DefaultValue;
+			std::shared_ptr<GraphQLValue> DefaultValue;
 		};
 	}
 }
