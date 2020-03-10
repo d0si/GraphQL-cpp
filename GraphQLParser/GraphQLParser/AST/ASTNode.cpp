@@ -15,19 +15,12 @@ namespace GraphQLParser {
 
 		}
 
-		ASTNode::~ASTNode() {
-			if (Comment != nullptr) {
-				// delete Comment;
-			}
+		ASTNode::ASTNode(ASTNodeKind kind, GraphQLLocation location, std::shared_ptr<GraphQLComment> comment) : Kind(kind), Location(location), Comment(comment) {
+
 		}
 
-		void ASTNode::set_comment(GraphQLComment comment) {
-			if (Comment != nullptr) {
-				delete Comment;
-			}
+		ASTNode::~ASTNode() {
 
-			Comment = new GraphQLComment();
-			*Comment = comment;
 		}
 	}
 }

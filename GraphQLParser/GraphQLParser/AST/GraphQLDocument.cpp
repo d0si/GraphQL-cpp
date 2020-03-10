@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLDocument::GraphQLDocument(std::vector<ASTNode*> definitions) : ASTNode(ASTNodeKind::Document), Definitions(definitions) {
+		GraphQLDocument::GraphQLDocument(std::vector<std::shared_ptr<ASTNode>> definitions) : ASTNode(ASTNodeKind::Document), Definitions(definitions) {
 
 		}
 	}

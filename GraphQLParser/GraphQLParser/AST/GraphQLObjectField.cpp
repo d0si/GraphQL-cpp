@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLObjectField::GraphQLObjectField(GraphQLName name, GraphQLValue* value) : ASTNode(ASTNodeKind::ObjectField), Name(name), Value(value) {
+		GraphQLObjectField::GraphQLObjectField(GraphQLName name, std::shared_ptr<GraphQLValue> value) : ASTNode(ASTNodeKind::ObjectField), Name(name), Value(value) {
 
 		}
 	}

@@ -13,6 +13,7 @@ namespace GraphQLParser {
 			ASTNode();
 			ASTNode(ASTNodeKind kind);
 			ASTNode(ASTNodeKind kind, GraphQLLocation location);
+			ASTNode(ASTNodeKind kind, GraphQLLocation location, std::shared_ptr<GraphQLComment> comment);
 			~ASTNode();
 			
 			void set_comment(GraphQLComment comment);

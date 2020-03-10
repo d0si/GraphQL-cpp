@@ -10,7 +10,7 @@ namespace GraphQLParser {
 		class GraphQLArgument : public ASTNode {
 		public:
 			GraphQLArgument();
-			GraphQLArgument(GraphQLName name, GraphQLValue* value);
+			GraphQLArgument(GraphQLName name, std::shared_ptr<GraphQLValue> value);
 
 			GraphQLName Name;
 
