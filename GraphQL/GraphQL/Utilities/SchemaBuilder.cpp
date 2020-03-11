@@ -1,5 +1,6 @@
 #include <GraphQL/Utilities/SchemaBuilder.h>
 #include <set>
+#include <typeinfo>
 #include <GraphQLParser/Lexer1.h>
 #include <GraphQLParser/Parser.h>
 #include <GraphQLParser/Source.h>
@@ -123,6 +124,8 @@ namespace GraphQL {
 				for (auto operation_type_def : schema_def->OperationTypes) {
 					auto type_name = operation_type_def.Type.Name.Value;
 					auto type = static_cast<Types::IObjectGraphType*>(GetType(type_name));
+
+					auto a = typeid(Types::IObjectGraphType);
 
 					switch (operation_type_def.Operation) {
 					case AST::OperationType::Query:

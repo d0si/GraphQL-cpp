@@ -154,10 +154,12 @@
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GraphQL\GraphQL.h" />
     <ClInclude Include="GraphQL\Types\DirectiveGraphType.h" />
     <ClInclude Include="GraphQL\Types\DirectiveLocation.h" />
     <ClInclude Include="GraphQL\Types\IComplexGraphType.h" />
     <ClInclude Include="GraphQL\Types\IGraphType.h" />
+    <ClInclude Include="GraphQL\Types\IImplementInterfaces.h" />
     <ClInclude Include="GraphQL\Types\INamedType.h" />
     <ClInclude Include="GraphQL\Types\IObjectGraphType.h" />
     <ClInclude Include="GraphQL\Types\ISchema.h" />

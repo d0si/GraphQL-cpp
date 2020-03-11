@@ -1,8 +1,11 @@
 #pragma once
 
+#include <GraphQL/Types/IComplexGraphType.h>
+#include <GraphQL/Types/IComplexGraphType.h>
+
 namespace GraphQL {
 	namespace Types {
-		class IObjectGraphType {
+		class IObjectGraphType : IComplexGraphType {
 		public:
 			bool (*IsTypeOf)(void* /*object*/);
 

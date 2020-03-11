@@ -29,7 +29,7 @@ query {
 
 			Assert::IsTrue(document.Definitions.size() == 1);
 			Assert::IsTrue(document.Definitions[0]->Kind == AST::ASTNodeKind::OperationDefinition);
-			AST::GraphQLOperationDefinition* def = static_cast<AST::GraphQLOperationDefinition*>(document.Definitions[0]);
+			auto def = std::static_pointer_cast<AST::GraphQLOperationDefinition>(document.Definitions[0]);
 			Assert::IsTrue(def->SelectionSet.Selections.size() == 3);
 			Assert::IsTrue(def->SelectionSet.Selections[0].Comment != nullptr);
 			Assert::AreEqual(def->SelectionSet.Selections[0].Comment->Text, std::string(" a comment below query"));
@@ -61,7 +61,7 @@ scalar JSON
 
 			Assert::IsTrue(document.Definitions.size() == 3);
 			Assert::IsTrue(document.Definitions[0]->Kind == AST::ASTNodeKind::EnumTypeDefinition);
-			AST::GraphQLEnumTypeDefinition* d1 = static_cast<AST::GraphQLEnumTypeDefinition*>(document.Definitions[0]);
+			auto d1 = std::static_pointer_cast<AST::GraphQLEnumTypeDefinition>(document.Definitions[0]);
 			Assert::AreEqual(d1->Name.Value, std::string("Animal"));
 			Assert::AreEqual(d1->Comment != nullptr ? d1->Comment->Text : "", std::string(" different animals"));
 			Assert::IsTrue(d1->Values.size() == 4);
@@ -69,12 +69,12 @@ scalar JSON
 			Assert::AreEqual(d1->Values[0].Comment != nullptr ? d1->Values[0].Comment->Text : "", std::string("a cat"));
 			Assert::AreEqual(d1->Values[1].Name.Value, std::string("Dog"));
 			Assert::AreEqual(d1->Values[2].Name.Value, std::string("Octopus"));
-			Assert::IsNull(d1->Values[2].Comment);
+			Assert::IsTrue(d1->Values[2].Comment == nullptr);
 			Assert::AreEqual(d1->Values[3].Name.Value, std::string("Bird"));
 
-			AST::GraphQLInputObjectTypeDefinition* d2 = static_cast<AST::GraphQLInputObjectTypeDefinition*>(document.Definitions[1]);
+			auto d2 = std::static_pointer_cast<AST::GraphQLInputObjectTypeDefinition>(document.Definitions[1]);
 			Assert::AreEqual(d2->Name.Value, std::string("Parameter"));
-			Assert::IsNull(d2->Comment);
+			Assert::IsTrue(d2->Comment == nullptr);
 			Assert::IsTrue(d2->Fields.size() == 1);
 			Assert::AreEqual(d2->Fields[0].Comment != nullptr ? d2->Fields[0].Comment->Text : "", std::string("any value"));
 		}
@@ -154,7 +154,7 @@ scalar JSON
 			
 			for (auto def : document.Definitions) {
 				if (def->Kind == AST::ASTNodeKind::ObjectTypeDefinition) {
-					auto type_def = static_cast<AST::GraphQLObjectTypeDefinition*>(def);
+					auto type_def = std::static_pointer_cast<AST::GraphQLObjectTypeDefinition>(def);
 					auto field_def = type_def->Fields[2];
 
 					Assert::AreEqual(std::string("Foo"), type_def->Name.Value);
@@ -167,10 +167,10 @@ scalar JSON
 
 			for (auto def : document.Definitions) {
 				if (def->Kind == AST::ASTNodeKind::SchemaDefinition) {
-					auto definition = static_cast<AST::GraphQLSchemaDefinition*>(def);
+					auto definition = std::static_pointer_cast<AST::GraphQLSchemaDefinition>(def);
 					const std::string compare = " Copyright (c) 2015, Facebook, Inc.";
 
-					Assert::IsNotNull(definition->Comment);
+					Assert::IsTrue(definition->Comment != nullptr);
 					Assert::IsTrue(definition->Comment->Text.length() > 0);
 					Assert::AreEqual(definition->Comment->Text.substr(0, compare.length()), compare);
 
@@ -194,8 +194,8 @@ scalar JSON
 			return Parser().Parse(Source("{ field }"));
 		}
 
-		AST::GraphQLOperationDefinition* GetSingleOperationDefinition(AST::GraphQLDocument document) {
-			return static_cast<AST::GraphQLOperationDefinition*>(document.Definitions[0]);
+		std::shared_ptr<AST::GraphQLOperationDefinition> GetSingleOperationDefinition(AST::GraphQLDocument document) {
+			return std::static_pointer_cast<AST::GraphQLOperationDefinition>(document.Definitions[0]);
 		}
 
 		AST::ASTNode GetSingleSelection(AST::GraphQLDocument document) {
