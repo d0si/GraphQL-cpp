@@ -162,7 +162,8 @@ namespace GraphQL {
 
 		}
 
+		Types::IObjectGraphType* ToObjectGraphType(GraphQLObjectDefinition ast_type, bool is_extension_type = false) {
 
-
+		}
 	}
 }
