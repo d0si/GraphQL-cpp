@@ -13,6 +13,6 @@ namespace GraphQLParser {
 		Parser();
 		Parser(Lexer lexer);
 
-		AST::GraphQLDocument Parse(Source source);
+		AST::GraphQLDocument Parse(const Source& source) const;
 	};
 }

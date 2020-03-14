@@ -6,8 +6,8 @@ namespace GraphQLParser {
 
 		}
 		GraphQLFieldSelection::GraphQLFieldSelection(
-			GraphQLName alias,
-			GraphQLName name,
+			std::shared_ptr<GraphQLName> alias,
+			std::shared_ptr<GraphQLName> name,
 			std::vector<GraphQLArgument> arguments,
 			std::vector<GraphQLDirective> directives,
 			GraphQLSelectionSet selection_set)

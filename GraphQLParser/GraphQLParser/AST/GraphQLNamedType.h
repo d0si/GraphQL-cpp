@@ -9,11 +9,11 @@ namespace GraphQLParser {
 		class GraphQLNamedType : public GraphQLType {
 		public:
 			GraphQLNamedType();
-			GraphQLNamedType(GraphQLName name);
+			GraphQLNamedType(std::shared_ptr<GraphQLName> name);
 
-			GraphQLName Name;
+			std::shared_ptr<GraphQLName> Name;
 
-			std::string to_string();
+			std::string to_string() const;
 		};
 	}
 }

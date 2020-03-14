@@ -9,13 +9,13 @@ namespace GraphQLParser {
 		class GraphQLDirectiveDefinition : public GraphQLTypeDefinition {
 		public:
 			GraphQLDirectiveDefinition();
-			GraphQLDirectiveDefinition(GraphQLName name, bool repeatable, std::vector<GraphQLInputValueDefinition> arguments, std::vector<GraphQLName> locations);
+			GraphQLDirectiveDefinition(std::shared_ptr<GraphQLName> name, bool repeatable, std::vector<GraphQLInputValueDefinition> arguments, std::vector<std::shared_ptr<GraphQLName>> locations);
 
 			bool Repeatable;
 
 			std::vector<GraphQLInputValueDefinition> Arguments;
 
-			std::vector<GraphQLName> Locations;
+			std::vector<std::shared_ptr<GraphQLName>> Locations;
 		};
 	}
 }

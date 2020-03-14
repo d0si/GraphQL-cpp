@@ -6,12 +6,12 @@ namespace GraphQLParser {
 
 		}
 		
-		GraphQLNamedType::GraphQLNamedType(GraphQLName name) : GraphQLType(ASTNodeKind::NamedType), Name(name) {
+		GraphQLNamedType::GraphQLNamedType(std::shared_ptr<GraphQLName> name) : GraphQLType(ASTNodeKind::NamedType), Name(name) {
 
 		}
 		
-		std::string GraphQLNamedType::to_string() {
-			return Name.Value;
+		std::string GraphQLNamedType::to_string() const {
+			return Name->Value;
 		}
 	}
 }

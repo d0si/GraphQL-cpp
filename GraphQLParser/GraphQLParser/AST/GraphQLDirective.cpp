@@ -2,15 +2,15 @@
 
 namespace GraphQLParser {
 	namespace AST {
-		GraphQLDirective::GraphQLDirective() : GraphQLDirective(GraphQLName()) {
+		GraphQLDirective::GraphQLDirective() : ASTNode(ASTNodeKind::Directive) {
 
 		}
 
-		GraphQLDirective::GraphQLDirective(GraphQLName name) : GraphQLDirective(name, std::vector<GraphQLArgument>()) {
+		GraphQLDirective::GraphQLDirective(std::shared_ptr<GraphQLName> name) : GraphQLDirective(name, std::vector<GraphQLArgument>()) {
 
 		}
 
-		GraphQLDirective::GraphQLDirective(GraphQLName name, std::vector<GraphQLArgument> arguments)
+		GraphQLDirective::GraphQLDirective(std::shared_ptr<GraphQLName> name, std::vector<GraphQLArgument> arguments)
 			: ASTNode(ASTNodeKind::Directive), Name(name), Arguments(arguments) {
 
 		}

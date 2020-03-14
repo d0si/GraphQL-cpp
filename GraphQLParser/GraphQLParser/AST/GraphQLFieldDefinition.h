@@ -12,7 +12,7 @@ namespace GraphQLParser {
 		public:
 			GraphQLFieldDefinition();
 			GraphQLFieldDefinition(
-				GraphQLName name,
+				std::shared_ptr<GraphQLName> name,
 				std::vector<GraphQLInputValueDefinition> arguments,
 				GraphQLType type,
 				std::vector<GraphQLDirective> directives);

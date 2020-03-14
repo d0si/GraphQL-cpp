@@ -114,6 +114,7 @@
     <ClCompile Include="GraphQLParser\Parser.cpp" />
     <ClCompile Include="GraphQLParser\ParserContext.cpp" />
     <ClCompile Include="GraphQLParser\Source.cpp" />
+    <ClCompile Include="GraphQLParser\Token.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

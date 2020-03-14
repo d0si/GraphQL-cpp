@@ -7,9 +7,9 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLVariable : public GraphQLValue {
 		public:
-			GraphQLVariable(GraphQLName name);
+			GraphQLVariable(std::shared_ptr<GraphQLName> name);
 
-			GraphQLName Name;
+			std::shared_ptr<GraphQLName> Name;
 		};
 	}
 }

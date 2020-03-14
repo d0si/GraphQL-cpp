@@ -14,7 +14,7 @@ namespace GraphQLParser {
 			GraphQLOperationDefinition(OperationType operation, GraphQLSelectionSet selection_set);
 			GraphQLOperationDefinition(
 				OperationType operation,
-				GraphQLName name,
+				std::shared_ptr<GraphQLName> name,
 				std::vector<GraphQLVariableDefinition> variable_definitions,
 				std::vector<GraphQLDirective> directives,
 				GraphQLSelectionSet selection_set
@@ -22,7 +22,7 @@ namespace GraphQLParser {
 
 			OperationType Operation;
 
-			GraphQLName Name;
+			std::shared_ptr<GraphQLName> Name;
 
 			std::vector<GraphQLVariableDefinition> VariableDefinitions;
 			

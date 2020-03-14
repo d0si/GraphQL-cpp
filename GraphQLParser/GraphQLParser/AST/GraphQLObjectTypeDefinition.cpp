@@ -7,7 +7,7 @@ namespace GraphQLParser {
 		}
 
 		GraphQLObjectTypeDefinition::GraphQLObjectTypeDefinition(
-			GraphQLName name,
+			std::shared_ptr<GraphQLName> name,
 			std::vector<GraphQLNamedType> interfaces,
 			std::vector<GraphQLDirective> directives,
 			std::vector<GraphQLFieldDefinition> fields)

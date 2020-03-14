@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLScalarTypeDefinition::GraphQLScalarTypeDefinition(GraphQLName name, std::vector<GraphQLDirective> directives)
+		GraphQLScalarTypeDefinition::GraphQLScalarTypeDefinition(std::shared_ptr<GraphQLName> name, std::vector<GraphQLDirective> directives)
 			: GraphQLTypeDefinition(ASTNodeKind::ScalarTypeDefinition, name), Directives(directives) {
 
 		}

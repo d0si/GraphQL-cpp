@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLArgument::GraphQLArgument(GraphQLName name, std::shared_ptr<GraphQLValue> value) : ASTNode(ASTNodeKind::Argument), Name(name), Value(value) {
+		GraphQLArgument::GraphQLArgument(std::shared_ptr<GraphQLName> name, std::shared_ptr<GraphQLValue> value) : ASTNode(ASTNodeKind::Argument), Name(name), Value(value) {
 
 		}
 	}

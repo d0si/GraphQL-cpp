@@ -10,10 +10,10 @@ namespace GraphQLParser {
 		class GraphQLDirective : public ASTNode {
 		public:
 			GraphQLDirective();
-			GraphQLDirective(GraphQLName name);
-			GraphQLDirective(GraphQLName name, std::vector<GraphQLArgument> arguments);
+			GraphQLDirective(std::shared_ptr<GraphQLName> name);
+			GraphQLDirective(std::shared_ptr<GraphQLName> name, std::vector<GraphQLArgument> arguments);
 
-			GraphQLName Name;
+			std::shared_ptr<GraphQLName> Name;
 
 			std::vector<GraphQLArgument> Arguments;
 		};

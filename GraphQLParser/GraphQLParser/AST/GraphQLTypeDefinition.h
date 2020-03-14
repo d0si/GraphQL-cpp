@@ -9,9 +9,9 @@ namespace GraphQLParser {
 		public:
 			GraphQLTypeDefinition();
 			GraphQLTypeDefinition(ASTNodeKind kind);
-			GraphQLTypeDefinition(ASTNodeKind kind, GraphQLName name);
+			GraphQLTypeDefinition(ASTNodeKind kind, std::shared_ptr<GraphQLName> name);
 
-			GraphQLName Name;
+			std::shared_ptr<GraphQLName> Name;
 		};
 	}
 }

@@ -10,7 +10,7 @@ namespace GraphQLParser {
 		class GraphQLInputObjectTypeDefinition : public GraphQLTypeDefinition {
 		public:
 			GraphQLInputObjectTypeDefinition();
-			GraphQLInputObjectTypeDefinition(GraphQLName name, std::vector<GraphQLDirective> directives, std::vector<GraphQLInputValueDefinition> fields);
+			GraphQLInputObjectTypeDefinition(std::shared_ptr<GraphQLName> name, std::vector<GraphQLDirective> directives, std::vector<GraphQLInputValueDefinition> fields);
 
 			std::vector<GraphQLDirective> Directives;
 

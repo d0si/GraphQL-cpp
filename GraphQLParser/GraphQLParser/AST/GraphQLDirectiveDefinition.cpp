@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLDirectiveDefinition::GraphQLDirectiveDefinition(GraphQLName name, bool repeatable, std::vector<GraphQLInputValueDefinition> arguments, std::vector<GraphQLName> locations)
+		GraphQLDirectiveDefinition::GraphQLDirectiveDefinition(std::shared_ptr<GraphQLName> name, bool repeatable, std::vector<GraphQLInputValueDefinition> arguments, std::vector<std::shared_ptr<GraphQLName>> locations)
 			: GraphQLTypeDefinition(ASTNodeKind::DirectiveDefinition, name), Arguments(arguments), Locations(locations), Repeatable(repeatable) {
 
 		}

@@ -10,9 +10,8 @@ namespace GraphQLParser {
 
 	}
 
-
-	AST::GraphQLDocument Parser::Parse(Source source) {
-		auto context = ParserContext(source, lexer);
+	AST::GraphQLDocument Parser::Parse(const Source& source) const {
+		ParserContext context = ParserContext(source, lexer);
 
 		return context.Parse();
 	}

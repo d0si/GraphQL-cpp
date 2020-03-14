@@ -10,7 +10,7 @@
 #include <GraphQLParser/AST/GraphQLNonNullType.h>
 
 namespace GraphQLParser {
-	ParserContext::ParserContext(Source source, Lexer lexer) : source(source), lexer(lexer), current_token(lexer.Lex(source)) {
+	ParserContext::ParserContext(const Source& source, Lexer lexer) : source(source), lexer(lexer), current_token(lexer.Lex(source)) {
 
 	}
 
@@ -33,7 +33,7 @@ namespace GraphQLParser {
 		current_token = lexer.Lex(source, current_token.End);
 	}
 
-	AST::GraphQLDocument ParserContext::CreateDocument(int start, std::vector<std::shared_ptr<AST::ASTNode>> definitions) {
+	AST::GraphQLDocument ParserContext::CreateDocument(int start, std::vector<std::shared_ptr<AST::ASTNode>> definitions) const {
 		AST::GraphQLDocument document(definitions);
 
 		document.Location.Start = start;
@@ -53,7 +53,7 @@ namespace GraphQLParser {
 		return definition;
 	}
 
-	std::shared_ptr<AST::ASTNode> ParserContext::CreateOperationDefinition(int start, AST::OperationType operation, AST::GraphQLName name) {
+	std::shared_ptr<AST::ASTNode> ParserContext::CreateOperationDefinition(int start, AST::OperationType operation, std::shared_ptr<AST::GraphQLName> name) {
 		auto comment = GetComment();
 		auto definitions = ParseVariableDefinitions();
 		auto directives = ParseDirectives();
@@ -83,7 +83,7 @@ namespace GraphQLParser {
 		}
 	}
 
-	void ParserContext::ExpectKeyword(std::string keyword) {
+	void ParserContext::ExpectKeyword(const std::string& keyword) {
 		Token token = current_token;
 
 		if (token.Kind == TokenKind::NAME && keyword == token.Value) {
@@ -95,12 +95,12 @@ namespace GraphQLParser {
 		throw Exceptions::GraphQLSyntaxErrorException("Expected \"" + keyword + "\", found Name \"" + token.Value + "\"", source, current_token.Start);
 	}
 
-	AST::GraphQLLocation ParserContext::GetLocation(int start) {
+	AST::GraphQLLocation ParserContext::GetLocation(int start) const {
 		return AST::GraphQLLocation(start, current_token.End);
 	}
 
-	AST::GraphQLName ParserContext::GetName() {
-		return Peek(TokenKind::NAME) ? ParseName() : AST::GraphQLName();
+	std::shared_ptr<AST::GraphQLName> ParserContext::GetName() {
+		return Peek(TokenKind::NAME) ? ParseName() : nullptr;
 	}
 
 	std::vector<AST::ASTNode> ParserContext::ManyNode(TokenKind open, AST::ASTNode(*next)(ParserContext*), TokenKind close) {
@@ -303,14 +303,14 @@ namespace GraphQLParser {
 		return value;
 	}
 
-	AST::GraphQLName ParserContext::ParseName() {
+	std::shared_ptr<AST::GraphQLName> ParserContext::ParseName() {
 		int start = current_token.Start;
 		std::string value = current_token.Value;
 
 		Expect(TokenKind::NAME);
 
-		AST::GraphQLName name(value);
-		name.Location = GetLocation(start);
+		std::shared_ptr<AST::GraphQLName> name = std::make_shared<AST::GraphQLName>(value);
+		name->Location = GetLocation(start);
 
 		return name;
 	}
@@ -448,7 +448,7 @@ namespace GraphQLParser {
 		return fragment;
 	}
 
-	AST::GraphQLName ParserContext::ParseFragmentName() {
+	std::shared_ptr<AST::GraphQLName> ParserContext::ParseFragmentName() {
 		if (current_token.Value == "on") {
 			throw Exceptions::GraphQLSyntaxErrorException("Unexpected " + current_token.to_string(), source, current_token.Start);
 		}
@@ -480,9 +480,9 @@ namespace GraphQLParser {
 	AST::ASTNode ParserContext::ParseFieldSelection() {
 		std::shared_ptr<AST::GraphQLComment> comment = GetComment();
 		int start = current_token.Start;
-		AST::GraphQLName name_or_alias = ParseName();
-		AST::GraphQLName name;
-		AST::GraphQLName alias;
+		std::shared_ptr<AST::GraphQLName> name_or_alias = ParseName();
+		std::shared_ptr<AST::GraphQLName> name;
+		std::shared_ptr<AST::GraphQLName> alias;
 
 		if (Skip(TokenKind::COLON)) {
 			name = ParseName();
@@ -495,7 +495,12 @@ namespace GraphQLParser {
 		return CreateFieldSelection(start, name, alias, comment);
 	}
 
-	AST::GraphQLFieldSelection ParserContext::CreateFieldSelection(int start, AST::GraphQLName name, AST::GraphQLName alias, std::shared_ptr<AST::GraphQLComment> comment) {
+	AST::GraphQLFieldSelection ParserContext::CreateFieldSelection(
+		int start,
+		std::shared_ptr<AST::GraphQLName> name,
+		std::shared_ptr<AST::GraphQLName> alias,
+		std::shared_ptr<AST::GraphQLComment> comment
+	) {
 		auto arguments = ParseArguments();
 		auto directives = ParseDirectives();
 		auto selection_set = Peek(TokenKind::BRACE_L) ? ParseSelectionSet() : AST::GraphQLSelectionSet();
@@ -867,7 +872,7 @@ namespace GraphQLParser {
 		int start = current_token.Start;
 
 		ExpectKeyword("scalar");
-		AST::GraphQLName name = ParseName();
+		auto name = ParseName();
 		std::vector<AST::GraphQLDirective> directives = ParseDirectives();
 
 		std::shared_ptr<AST::GraphQLScalarTypeDefinition> definition = std::make_shared<AST::GraphQLScalarTypeDefinition>(name, directives);
@@ -918,7 +923,7 @@ namespace GraphQLParser {
 	AST::GraphQLFieldDefinition ParserContext::ParseFieldDefinition() {
 		std::shared_ptr<AST::GraphQLComment> comment = GetComment();
 		int start = current_token.Start;
-		AST::GraphQLName name = ParseName();
+		auto name = ParseName();
 		std::vector<AST::GraphQLInputValueDefinition> args = ParseArgumentDefs();
 		Expect(TokenKind::COLON);
 		auto type = ParseType();
@@ -949,7 +954,7 @@ namespace GraphQLParser {
 	AST::GraphQLInputValueDefinition ParserContext::ParseInputValueDef() {
 		std::shared_ptr<AST::GraphQLComment> comment = GetComment();
 		int start = current_token.Start;
-		AST::GraphQLName name = ParseName();
+		auto name = ParseName();
 		Expect(TokenKind::COLON);
 		auto type = ParseType();
 		auto default_constant_value = GetDefaultConstantValue();
@@ -1003,7 +1008,7 @@ namespace GraphQLParser {
 		int start = current_token.Start;
 		ExpectKeyword("union");
 
-		AST::GraphQLName name = ParseName();
+		auto name = ParseName();
 		std::vector<AST::GraphQLDirective> directives = ParseDirectives();
 		Expect(TokenKind::EQUALS);
 		std::vector<AST::GraphQLNamedType> types = ParseUnionMembers();
@@ -1100,7 +1105,7 @@ namespace GraphQLParser {
 		int start = current_token.Start;
 		ExpectKeyword("directive");
 		Expect(TokenKind::AT);
-		AST::GraphQLName name = ParseName();
+		auto name = ParseName();
 		std::vector<AST::GraphQLInputValueDefinition> args = ParseArgumentDefs();
 		bool repeatable = ParseRepeatable();
 
@@ -1131,8 +1136,8 @@ namespace GraphQLParser {
 		return false;
 	}
 
-	std::vector<AST::GraphQLName> ParserContext::ParseDirectiveLocations() {
-		std::vector<AST::GraphQLName> locations;
+	std::vector<std::shared_ptr<AST::GraphQLName>> ParserContext::ParseDirectiveLocations() {
+		std::vector<std::shared_ptr<AST::GraphQLName>> locations;
 
 		Skip(TokenKind::PIPE);
 

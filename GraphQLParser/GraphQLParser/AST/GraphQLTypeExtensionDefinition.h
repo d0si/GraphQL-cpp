@@ -8,7 +8,7 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLTypeExtensionDefinition : public GraphQLTypeDefinition {
 		public:
-			GraphQLTypeExtensionDefinition(GraphQLName name, std::shared_ptr<GraphQLObjectTypeDefinition> definition);
+			GraphQLTypeExtensionDefinition(std::shared_ptr<GraphQLName> name, std::shared_ptr<GraphQLObjectTypeDefinition> definition);
 
 			std::shared_ptr<GraphQLObjectTypeDefinition> Definition;
 		};

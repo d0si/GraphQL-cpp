@@ -9,7 +9,7 @@ namespace GraphQLParser {
 		class GraphQLEnumValueDefinition : public GraphQLTypeDefinition {
 		public:
 			GraphQLEnumValueDefinition();
-			GraphQLEnumValueDefinition(GraphQLName name, std::vector<GraphQLDirective> directives);
+			GraphQLEnumValueDefinition(std::shared_ptr<GraphQLName> name, std::vector<GraphQLDirective> directives);
 
 			std::vector<GraphQLDirective> Directives;
 		};

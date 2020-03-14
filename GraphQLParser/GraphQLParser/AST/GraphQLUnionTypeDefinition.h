@@ -10,7 +10,7 @@ namespace GraphQLParser {
 	namespace AST {
 		class GraphQLUnionTypeDefinition : public GraphQLTypeDefinition {
 		public:
-			GraphQLUnionTypeDefinition(GraphQLName name, std::vector<GraphQLDirective> directives, std::vector<GraphQLNamedType> types);
+			GraphQLUnionTypeDefinition(std::shared_ptr<GraphQLName> name, std::vector<GraphQLDirective> directives, std::vector<GraphQLNamedType> types);
 
 			std::vector<GraphQLDirective> Directives;
 

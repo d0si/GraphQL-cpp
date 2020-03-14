@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLEnumValueDefinition::GraphQLEnumValueDefinition(GraphQLName name, std::vector<GraphQLDirective> directives)
+		GraphQLEnumValueDefinition::GraphQLEnumValueDefinition(std::shared_ptr<GraphQLName> name, std::vector<GraphQLDirective> directives)
 			: GraphQLTypeDefinition(ASTNodeKind::EnumValueDefinition, name), Directives(directives) {
 
 		}

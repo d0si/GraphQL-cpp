@@ -11,11 +11,11 @@ namespace GraphQLParser {
 
 		}
 
-		ASTNode::ASTNode(ASTNodeKind kind, GraphQLLocation location) : Kind(kind), Location(location) {
+		ASTNode::ASTNode(ASTNodeKind kind, const GraphQLLocation& location) : Kind(kind), Location(location) {
 
 		}
 
-		ASTNode::ASTNode(ASTNodeKind kind, GraphQLLocation location, std::shared_ptr<GraphQLComment> comment) : Kind(kind), Location(location), Comment(comment) {
+		ASTNode::ASTNode(ASTNodeKind kind, const GraphQLLocation& location, std::shared_ptr<GraphQLComment> comment) : Kind(kind), Location(location), Comment(comment) {
 
 		}
 

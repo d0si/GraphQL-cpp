@@ -2,7 +2,7 @@
 
 namespace GraphQLParser {
 	namespace AST {
-		GraphQLVariable::GraphQLVariable(GraphQLName name)
+		GraphQLVariable::GraphQLVariable(std::shared_ptr<GraphQLName> name)
 			: GraphQLValue(ASTNodeKind::Variable), Name(name) {
 
 		}

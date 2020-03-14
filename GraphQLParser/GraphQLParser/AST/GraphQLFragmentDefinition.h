@@ -7,9 +7,9 @@ namespace GraphQLParser {
 		class GraphQLFragmentDefinition : public GraphQLInlineFragment {
 		public:
 			GraphQLFragmentDefinition();
-			GraphQLFragmentDefinition(GraphQLName name, GraphQLNamedType type_condition, std::vector<GraphQLDirective> directives, GraphQLSelectionSet selection_set);
+			GraphQLFragmentDefinition(std::shared_ptr<GraphQLName> name, GraphQLNamedType type_condition, std::vector<GraphQLDirective> directives, GraphQLSelectionSet selection_set);
 
-			GraphQLName Name;
+			std::shared_ptr<GraphQLName> Name;
 		};
 	}
 }

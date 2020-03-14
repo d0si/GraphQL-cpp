@@ -6,7 +6,7 @@ namespace GraphQLParser {
 
 		}
 
-		GraphQLInterfaceTypeDefinition::GraphQLInterfaceTypeDefinition(GraphQLName name, std::vector<GraphQLDirective> directives, std::vector<AST::GraphQLFieldDefinition> fields)
+		GraphQLInterfaceTypeDefinition::GraphQLInterfaceTypeDefinition(std::shared_ptr<GraphQLName> name, std::vector<GraphQLDirective> directives, std::vector<AST::GraphQLFieldDefinition> fields)
 			: GraphQLTypeDefinition(ASTNodeKind::InterfaceTypeDefinition, name), Directives(directives), Fields(fields) {
 
 		}

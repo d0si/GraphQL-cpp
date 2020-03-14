@@ -2,7 +2,7 @@
 
 namespace GraphQLParser {
 	namespace AST {
-        enum ASTNodeKind {
+        enum class ASTNodeKind {
             Name,
             Document,
             OperationDefinition,
@@ -43,7 +43,7 @@ namespace GraphQLParser {
             Comment,
         };
 
-        enum OperationType {
+        enum class OperationType {
             Query,
             Mutation,
             Subscription

@@ -1,7 +1,7 @@
 #pragma once
 
 namespace GraphQLParser {
-	enum TokenKind {
+	enum class TokenKind {
         EOF_ = 1,
         BANG = 2,
         DOLLAR = 3,
