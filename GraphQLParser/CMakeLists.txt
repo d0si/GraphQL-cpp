@@ -6,6 +6,7 @@ set(GRAPHQLPARSER_SOURCES
     GraphQLParser/Parser.cpp
     GraphQLParser/ParserContext.cpp
     GraphQLParser/Source.cpp
+    GraphQLParser/Token.cpp
 
     GraphQLParser/AST/ASTNode.cpp
     GraphQLParser/AST/GraphQLArgument.cpp
