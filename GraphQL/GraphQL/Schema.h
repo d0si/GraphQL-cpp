@@ -6,6 +6,6 @@ namespace GraphQL {
 	class Schema {
 
 	public:
-		static void parse(std::string definitions);
+		static Schema parse(std::string definitions);
 	};
 }
