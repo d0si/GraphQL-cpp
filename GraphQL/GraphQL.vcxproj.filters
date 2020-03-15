@@ -42,6 +42,9 @@
     <ClCompile Include="GraphQL\Types\DirectiveGraphType.cpp">
       <Filter>Source Files\Types</Filter>
     </ClCompile>
+    <ClCompile Include="GraphQL\Schema.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GraphQL\Utilities\SchemaBuilder.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="GraphQL\Types\IImplementInterfaces.h">
       <Filter>Header Files\Types</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphQL\Schema.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
