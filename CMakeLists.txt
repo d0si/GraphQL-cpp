@@ -12,6 +12,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # Set cpp sources
 set(GRAPHQL_SOURCES
     GraphQL/Parser/Parser.cpp
+    GraphQL/Parser/Lexer.cpp
+    GraphQL/Parser/Token.cpp
+    GraphQL/Parser/Source.cpp
+    GraphQL/Parser/Location.cpp
+
+    GraphQL/Exceptions/SyntaxErrorException.cpp
 )
 
 # Fallback to Release build if nothing else was chosen
